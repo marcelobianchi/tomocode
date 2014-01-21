@@ -60,13 +60,13 @@ function tomo() {
         ;;
 
   # Model Managenment))
-        clonemodel)
-        _cloneModel $*  # Clone the specified model in the specified area
+        clonemodel)     # Clone the specified model in the specified area
+        _cloneModel $*
         ;;
-        ls)
+        ls)             # List the existing models in the DATA folder
         _lsModel $*
         ;;
-	run)
+        run)            # Run the start_real and keep a log on the RUN folder 
 	_run
 	;;
 
@@ -110,9 +110,13 @@ function tomo() {
             cd "${tomobase}/PROGRAM/START_SYNTH/"
             return
         ;;
-        *)
+  # Generic commands))
+        tomobase)      # Show the location of the tomobase folder
+            echo "${tomobase}"
+        ;;
+        help|*)        # Show the help for the tomo.bshm tools package
             echo "Valid options are:"
-            egrep "^[ a-Z#]+[)]" $tomobase/SHELL/tomo.bshm | grep -v '*'
+            egrep "^[ a-Z#*|]+[)]" $tomobase/SHELL/tomo.bshm
         ;;
     esac
 }
