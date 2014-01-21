@@ -1,0 +1,7 @@
+         do k=1,nvert1
+            do j=1,(nn1(k)-1)                 ! отрезки на вертикальных линиях
+               notr1=notr1+1
+               otr1(1,notr1)=obr1(j,k)
+               otr1(2,notr1)=obr1(j+1,k)
+            end do
+         end do

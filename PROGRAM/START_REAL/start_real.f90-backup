@@ -1,0 +1,284 @@
+USE IFPORT
+character*8 ar, ar_all(50), re, re_all(50), line
+character*1 rg_all(100),rg,it
+integer kod_loc(50),kod_iter(50),kod_oe(50),kod_rf(50)
+integer f_isdir
+
+open(1, file='../../all_areas.dat')
+do i=1,5
+	read(1,*)
+end do
+do i=1,10
+	read(1,'(a8,1x,a8,3(1x,i1))',end=7)re_all(i),ar_all(i),&
+	kod_iter(i),kod_oe(i),kod_rf(i)
+	write(*,*) re_all(i), ar_all(i), kod_iter(i), kod_rf(i)
+end do
+7 close(1)
+n_ar=i-1
+write(*,*)' n_ar=',n_ar
+
+! Check all the areas:
+do iar=1,n_ar
+	re=re_all(iar)
+	ar=ar_all(iar)
+	niter=kod_iter(iar)
+	koe=kod_oe(iar)
+	kref=kod_rf(iar)
+
+        if ((LEN(re).EQ.0).OR.&
+            (LEN(ar).EQ.0).OR.&
+            (f_isdir('../../DATA/'//re//'/'//ar//'/',LEN('../../DATA/'//re//'/'//ar//'/')).EQ.0)) then
+          write(*,*) 'A',iar,'Missing Area '//re//' and Model '//ar
+          cycle
+        endif
+
+	call INITIALIZEDIRS(re, ar)
+	open(1,file='../../DATA/'//re//'/'//ar//'/INI_PARAM/MAJOR_PARAM.DAT')
+	do i=1,10000
+		read(1,'(a8)',end=511)line
+		if(line.eq.'SELECT_P') goto 512
+	end do
+
+	511 continue
+	write(*,*)' cannot find SELECT PARAMETERS in MAJOR_PARAM.DAT!!!'
+	!pause
+
+	512 continue
+	read(1,*)
+	read(1,*) kod_local
+	close(1)
+
+	if (kod_local.eq.0) goto 78
+
+	if(kref.eq.1) then
+		open(11,file='../../model.dat')
+		write(11,'(a8)')re		
+		write(11,'(a8)')ar		
+		write(11,'(i1)')1		
+		write(11,'(i1)')1	
+		write(11,'(i1)')koe	
+		close(11)
+
+		write(*,*) '*************************************'
+		write(*,*)'reference table, start 1D model'
+		write(*,*) '*************************************'
+
+
+		i=system('../../LIN_PROG/0_ref_rays/refrays.exe')
+
+		write(*,*) '*************************************'
+		write(*,*)'Location in start 1D model'
+		write(*,*) '*************************************'
+
+		i=system('../../LIN_PROG/1_loc_event/locate.exe')
+
+		open(11,file='../../model.dat')
+		write(11,'(a8)')re		
+		write(11,'(a8)')ar		
+		close(11)
+	
+		write(*,*) '*************************************'
+		write(*,*)'optimization of 1D model'
+		write(*,*) '*************************************'
+		
+		i=system('../../1D_MODEL/START_1D/start_real.exe')
+	end if
+
+	78 continue
+	!pause
+
+	open(11,file='../../model.dat')
+	write(11,'(a8)')re		
+	write(11,'(a8)')ar		
+	write(11,'(i1)')1		
+	write(11,'(i1)')1	
+
+        ! Code of Odd or Even (koe)
+	write(11,'(i1)')koe	
+	close(11)
+
+	write(*,*) '*************************************'
+	write(*,*)'reference table, optimized 1D model'
+	write(*,*) '*************************************'
+
+	i=system('../../LIN_PROG/0_REF_RAYS/refrays.exe')
+        !pause
+
+	if (kod_local.eq.1) then
+		write(*,*) '*************************************'
+		write(*,*)'location in optimized 1D model'
+		write(*,*) '*************************************'
+
+		i=system('../../LIN_PROG/1_LOC_EVENT/locate.exe')
+	end if
+
+	!******************************************************************
+	open(1,file='../../DATA/'//re//'/'//ar//'/INI_PARAM/MAJOR_PARAM.DAT')
+	do i=1,10000
+		read(1,'(a8)',end=573)line
+		if(line.eq.'ORIENTAT') goto 574
+	end do
+	573 continue
+	write(*,*)' cannot find ORIENTATIONS in MAJOR_PARAM.DAT!!!'
+	!pause
+	574 read(1,*)nornt
+	close(1)
+
+	!******************************************************************
+	kod_param=1
+	open(1,file='../../DATA/'//re//'/'//ar//'/INI_PARAM/MAJOR_PARAM.DAT')
+	do i=1,10000
+		read(1,'(a8)',end=513)line
+		if(line.eq.'GRID_PAR') goto 514
+	end do
+	513 continue
+	write(*,*)' cannot find GRID PARAMETERS in MAJOR_PARAM.DAT!!!'
+	!pause
+	514 continue
+	read(1,*)
+	read(1,*)
+	read(1,*)
+	read(1,*)kod_param
+	close(1)
+	!******************************************************************
+
+	write(*,*) '*************************************************'
+	write(*,*)'SELECT DATA for itereative Tomo inversion'
+	write(*,*) '*************************************************'
+	i=system('../0_SELECT_DATA/select.exe')
+        !pause
+
+
+        ! Execute the inversion for grids with different orientations:
+	do iter=1,niter	
+		write(it,'(i1)')iter
+		!goto 999
+		open(11,file='../../model.dat')
+		write(11,'(a8)')re		
+		write(11,'(a8)')ar		
+		write(11,'(i1)')iter		
+		write(11,'(i1)')1	
+		write(11,'(i1)')koe	
+		close(11)
+
+
+		write(*,*)'	 ****************************************************'
+		write(*,*)'	 3D rays tracing'
+		!if (iter.ne.1)	i=system('../1_3D_LOCATE/3D_locate.exe')
+		i=system('../1_3D_LOCATE/3D_locate.exe')
+		!pause
+
+999		continue
+
+		!open(11,file='../../VISUAL/area.dat')
+		!write(11,'(a8)')re		
+		!write(11,'(a8)')ar		
+		!write(11,*)iter		
+		!write(11,*)1,nornt	
+		!write(11,*)0	
+		!write(11,*)0	
+		!write(11,*)0	
+		!write(11,*)0	
+		!write(11,*)0	
+		!close(11)
+
+		if(kod_param.eq.1) then
+			do igr=1,nornt
+				open(11,file='../../model.dat')
+				write(11,'(a8)')re		
+				write(11,'(a8)')ar		
+				write(11,'(i1)')iter		
+				write(11,'(i1)')igr	
+				close(11)
+
+				if(iter.eq.1) then
+					write(*,*)'	 ****************************************************'
+					write(*,*)'	 Compute the ray density'
+					i=system('../2_RAY_DENSITY/plotray.exe')
+					write(*,*)'	 ****************************************************'
+					write(*,*)'	 Compute the parameterization grid:'
+					i=system('../3_GRID/grid.exe')
+					i=system('../4_TETRAD/tetrad.exe')
+					i=system('../5_SOSEDI/add_matr.exe')
+				end if
+				i=system('../6_MATR/matr.exe')
+				i=system('../7_INVERS/invbig.exe')
+				!pause
+			end do
+			i=system('../8_3D_MODEL/mod_3D.exe')
+			!i=system('../../VISUAL/hor_result_nodes/visual.exe')
+
+		else if(kod_param.eq.2) then
+                !!! This is never executed !
+			do igr=1,nornt
+				open(11,file='../../model.dat')
+				write(11,'(a8)')re		
+				write(11,'(a8)')ar		
+				write(11,'(i1)')iter		
+				write(11,'(i1)')igr	
+				close(11)
+				if(iter.eq.1) then
+
+					write(*,*)'	 ****************************************************'
+					write(*,*)'	 Compute the ray density'
+					i=system('../2a_ray_density/plotray.exe')
+					write(*,*)'	 ****************************************************'
+					write(*,*)'	 Compute the parameterization grid:'
+					i=system('../3a_grid/block.exe')
+				end if
+				i=system('../6a_matr/matr_hor.exe')
+				i=system('../7a_invers/Invers_hor.exe')
+			end do
+			i=system('../8a_3D_model/3D_model_block.exe')
+		end if
+	end do ! Different iterations
+end do	! Different areas
+
+stop
+end
+
+SUBROUTINE INITIALIZEDIRS(re, ar)
+	IMPLICIT NONE
+
+	integer f_isdir,f_copyfile, f_createdir, f_isfile, i, LEN
+	character*8 re, ar
+	character*1024 temp
+	integer kod_local
+
+	if (f_isdir('../../DATA/'//re//'/'//ar,LEN('../../DATA/'//re//'/'//ar)).NE.1) then
+	 WRITE(*,*) 'Missing area: ',ar, ' region:',re
+         STOP
+        endif
+
+	if (f_isfile('../../DATA/'//re//'/'//ar//'/INI_PARAM/MAJOR_PARAM.DAT',LEN('../../DATA/'//re//'/'//ar//'/INI_PARAM/MAJOR_PARAM.DAT')).NE.1) then
+	 WRITE(*,*) 'Missing major param in area: ',ar, ' region:',re
+         STOP
+        endif
+
+	i = f_createdir('../../DATA/' // re // '/' // ar // '/3D_MODEL', LEN('../../DATA/'//re//'/'//ar//'/3D_MODEL'))
+	i = f_createdir('../../DATA/' // re // '/' // ar // '/GRIDS',    LEN('../../DATA/'//re//'/'//ar//'/GRIDS'))
+	i = f_createdir('../../DATA/' // re // '/' // ar // '/RESULT',   LEN('../../DATA/'//re//'/'//ar//'/RESULT'))
+	i = f_createdir('../../DATA/' // re // '/' // ar // '/TIMES',    LEN('../../DATA/'//re//'/'//ar//'/TIMES'))
+	
+	temp='../../DATA/'//re//'/'//ar//'/INI_PARAM/ref_start.dat'	
+	if (f_isfile(temp, LEN(temp)).NE.1) then
+ 	 write (*,*) 'No Input reference model.'
+	 STOP
+	else
+  	 i=f_copyfile(temp,LEN(temp),'../../DATA/'//re//'/'//ar//'/INI_PARAM/refmod.dat', LEN('../../DATA/'//re//'/'//ar//'/INI_PARAM/refmod.dat'),1)	 	 
+	 if (i.NE.0) then
+	    write(*,*) 'Error copying: ',temp
+	    STOP
+	 endif
+	endif
+
+	temp='../../DATA/'//re//'/INIDATA/rays_local.dat'
+	if (f_isfile(temp, LEN(temp)).NE.0) then
+	 i = f_copyfile(temp,LEN(temp),'../../DATA/'//re//'/'//ar//'/TIMES/rays_loc.dat',LEN('../../DATA/'//re//'/'//ar//'/TIMES/rays_loc.dat'),1)
+	 if (i.NE.0) then
+	    write(*,*) 'Error copying: ',temp
+	    STOP
+	 endif	 
+	endif
+END SUBROUTINE
+

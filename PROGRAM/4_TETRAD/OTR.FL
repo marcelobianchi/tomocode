@@ -1,0 +1,25 @@
+         do iver=1,nvert1-1
+            i1=1
+            i2=1
+            notr1=notr1+1
+            otr1(1,notr1)=obr1(1,iver)
+            otr1(2,notr1)=obr1(1,iver+1)
+1           continue
+            if(i1.eq.nn1(iver).and.i2.eq.nn1(iver+1))cycle
+            dx1=1.e6
+            dx2=1.e6
+            if(i2.ne.nn1(iver+1)) dx1=abs(x1(i1,iver)-x1(i2+1,iver+1))
+            if(i1.ne.nn1(iver)) dx2=abs(x1(i2,iver+1)-x1(i1+1,iver))
+            if (dx1.gt.dx2) then
+               notr1=notr1+1
+               otr1(1,notr1)=obr1(i2,iver+1)
+               otr1(2,notr1)=obr1(i1+1,iver)
+               i1=i1+1
+            else
+               notr1=notr1+1
+               otr1(1,notr1)=obr1(i1,iver)
+               otr1(2,notr1)=obr1(i2+1,iver+1)
+               i2=i2+1
+            endif
+            goto 1
+         end do

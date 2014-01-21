@@ -1,0 +1,28 @@
+         npver=0                             !
+         k=1                                 ! Считаем количество точек
+         do m=1,ntop1                        ! на каждой вертикали
+            if (ztop1(m).ne.verlin1(k))then  ! вверху...
+               nn1(k)=npver                  !
+               k=k+1                         !
+               npver=0                       !
+            end if                           !
+            npver=npver+1
+            xver1(npver,k)=xtop1(m)
+            obr1(npver,k)=m
+         end do
+         nn1(nver1)=2
+
+         npver=0                             ! ... и внизу
+         k=1
+         do m=1,ntop2
+            if (ztop2(m).ne.verlin2(k))then
+               nn2(k)=npver
+               k=k+1
+               npver=0
+            end if
+            npver=npver+1
+            xver2(npver,k)=xtop2(m)
+            obr2(npver,k)=m+ntop1
+         end do
+         nn2(nver2)=2
+

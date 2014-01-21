@@ -1,0 +1,2 @@
+BIN=glob.exe
+EXTRAOBJ="../../SUBR/CONVERS/epic_dist.o ../../SUBR/RAZNOE/hipc.o ../../SUBR/CONVERS/sfdec.o"

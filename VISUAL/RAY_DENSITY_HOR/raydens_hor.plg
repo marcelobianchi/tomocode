@@ -1,0 +1,26 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: raydens_hor - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOKUME~1\jakovlev\LOKALE~1\Temp\RSP8FC.tmp" with contents
+[
+/check:bounds /compile_only /dbglibs /debug:full /nologo /traceback /warn:argument_checking /warn:nofileopt /module:"Debug/" /object:"Debug/" /pdbfile:"Debug/DF60.PDB" 
+"D:\TOMO\Tele_Tomo\subr\convers\sfdec.f90"
+]
+Creating command line "link.exe kernel32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/raydens_hor.pdb" /debug /machine:I386 /out:"Debug/raydens_hor.exe" /pdbtype:sept  .\Debug\decsf.obj .\Debug\int_best.obj .\Debug\sfdec.obj .\Debug\raydens_hor.obj "
+<h3>Output Window</h3>
+Compiling Fortran...
+D:\TOMO\Tele_Tomo\subr\convers\sfdec.f90
+Linking...
+
+
+
+<h3>Results</h3>
+raydens_hor.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

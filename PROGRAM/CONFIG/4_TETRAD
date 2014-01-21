@@ -1,0 +1,3 @@
+BIN=tetrad.exe
+LIBS=""
+EXTRAOBJ="../../SUBR/CONVERS/decsf.o"

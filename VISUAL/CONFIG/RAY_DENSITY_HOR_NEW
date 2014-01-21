@@ -1,0 +1,2 @@
+BIN=raydens_hor.exe
+EXTRAOBJ="../../SUBR/RAZNOE/int_best.o ../../SUBR/CONVERS/decsf.o ../../SUBR/CONVERS/sfdec.o"

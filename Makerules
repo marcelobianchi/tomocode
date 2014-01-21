@@ -1,0 +1,4 @@
+FC=ifort
+CC=gcc
+FFLAGS=-I./ -DLINUX -fpp
+CFLAGS=-I./ -O2 -DLINUX

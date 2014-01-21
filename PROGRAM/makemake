@@ -1,0 +1,61 @@
+#!/bin/bash
+
+comp=""
+for d in 0_SELECT_DATA  2_RAY_DENSITY  4_TETRAD  6_MATR    8_3D_MODEL     A_SET_SYN_VER  START_SYNTH 1_3D_LOCATE 3_GRID  5_SOSEDI  7_INVERS  A_SET_SYN_HOR  B_SYNTH_TIMES START_REAL
+do
+ [ -d "$d" ] && echo "Working on: $d" || continue
+ if [ -f ./CONFIG/"$d" ] 
+ then 
+   source ./CONFIG/"$d"
+ else 
+   echo " W:> No config file $d"
+ fi
+  
+ cd "$d"
+ OBJ=`ls -1 *.f90 | sed -e 's/.f90/.o/g' | tr "\n" " "`
+
+ cat << EOF > Makefile
+include ../../Makerules
+OBJ=$OBJ
+OBJ+=$EXTRAOBJ
+BIN=$BIN
+
+%.o:%.f90
+	\$(FC) -c \$(FFLAGS) \$<
+
+all: compile
+
+compile: \$(OBJ)
+	\$(FC)  \$(FFLAGS) -o \$(BIN) \$(OBJ) \$(LIBS) 
+
+clean:
+	@rm -f *.o \$(BIN)
+
+fullclean: clean
+	@rm -f \$(BIN)
+
+install:
+	@cp \$(BIN) \$(DESTDIR)
+
+EOF
+ comp="$comp $d"
+ cd - > /dev/null
+done
+
+
+echo "all:" > Makefile
+for d in $comp
+do
+ echo -e "\t@echo -e \"\e[31;1mWorking on: $d\e[m\"" >> Makefile
+ echo -e "\t@make --no-print-directory -C $d" >> Makefile
+ echo -e "\t@echo \"\"" >> Makefile
+done
+
+echo "" >> Makefile
+echo "clean:" >> Makefile
+for d in $comp
+do
+ echo -e "\t@echo -e \"\e[31;1mWorking on: $d\e[m\"" >> Makefile
+ echo -e "\t@make --no-print-directory -C $d clean" >> Makefile
+done
+

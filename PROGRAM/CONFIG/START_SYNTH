@@ -1,0 +1,3 @@
+BIN=synth.exe
+LIBS=""
+EXTRAOBJ="../../SUBR/OTHERS/file.o"

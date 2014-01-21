@@ -1,0 +1,3 @@
+BIN=select.exe
+LIBS=""
+EXTRAOBJ="../../SUBR/CONVERS/decsf.o"

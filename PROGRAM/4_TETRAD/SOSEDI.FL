@@ -1,0 +1,28 @@
+         ! блок определения соседей
+         sosedi=0
+         do i=1,ntop1
+            nsos=0
+            do k = 1, notr1
+               if (otr1(1,k).eq.i) then
+                  nsos=nsos+1
+                  sosedi(nsos,i)=otr1(2,k)
+               endif
+               if (otr1(2,k).eq.i) then
+                  nsos=nsos+1
+                  sosedi(nsos,i)=otr1(1,k)
+               endif
+            enddo
+         enddo
+         do i=1,ntop2
+            nsos=0
+            do k = 1, notr2
+               if (otr2(1,k).eq.i) then
+                  nsos=nsos+1
+                  sosedi(nsos,i+ntop1)=otr2(2,k)+ntop1
+               endif
+               if (otr2(2,k).eq.i) then
+                  nsos=nsos+1
+                  sosedi(nsos,i+ntop1)=otr2(1,k)+ntop1
+               endif
+            enddo
+         enddo

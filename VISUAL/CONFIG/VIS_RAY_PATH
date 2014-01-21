@@ -1,0 +1,2 @@
+BIN=path.exe
+EXTRAOBJ="../../SUBR/CONVERS/decsf.o ../../SUBR/CONVERS/sfdec.o"

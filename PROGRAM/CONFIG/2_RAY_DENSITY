@@ -1,0 +1,3 @@
+BIN=plotray.exe
+LIBS=""
+EXTRAOBJ="../../SUBR/RAZNOE/int_best.o"

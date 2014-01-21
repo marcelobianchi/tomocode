@@ -1,0 +1,2 @@
+BIN=visual_synini_3d.exe
+EXTRAOBJ="../../SUBR/CONVERS/decsf.f90 ../../SUBR/SYNTH/dv_board.f90 ../../SUBR/SYNTH/hor_anom.f90 ../../SUBR/SYNTH/prep_board_dv.f90 ../../SUBR/SYNTH/read_hor_an.f90 ../../SUBR/SYNTH/read_vert_an.f90 ../../SUBR/SYNTH/read_vert_brd.f90 ../../SUBR/CONVERS/sfdec.f90 ../../SUBR/SYNTH/vert_anom.f90 ../../SUBR/SYNTH/vert_brd.f90 ../../SUBR/SYNTH/vrefmod.f90"

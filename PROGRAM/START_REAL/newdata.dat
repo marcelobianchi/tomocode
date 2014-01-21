@@ -1,0 +1,20 @@
+ TIP_0010REA_0105           3           0
+ TIP_0010REA_0106           3           0
+ TIP_0010REA_0107           3           0
+ TIP_0010REA_0108           3           0
+ TIP_0010REA_0113           3           0
+  n_ar=           5
+ New Area: REA_0105
+`../../DATA/TIP_0010/REA_0105/INI_PARAM/ref_start.dat' -> `../../DATA/TIP_0010/REA_0105/INI_PARAM/refmod.dat'
+ *************************************
+ reference table, optimized 1D model
+ *************************************
+ Running command: ../../LIN_PROG/0_REF_RAYS/refrays.exe
+  ar=REA_0105
+  nrefmod=         135
+  i=          10  z=   9.000000      ips=           1  nref=        2427
+  i=          10  z=   9.000000      ips=           2  nref=        3338
+  i=          20  z=   19.00000      ips=           1  nref=        2415
+  i=          20  z=   19.00000      ips=           2  nref=        3044
+  i=          30  z=   29.00000      ips=           1  nref=        3009
+  i=          30  z=   29.00000      ips=           2  nref=        3345

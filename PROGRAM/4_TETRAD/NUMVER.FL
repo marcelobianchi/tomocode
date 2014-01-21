@@ -1,0 +1,15 @@
+         npoinonver=1
+         iverline=1
+         x1(1,1)=xtop1(1)
+         obr1(1,1)=1
+         do l = 2, ntop1
+            if (ztop1(l).ne.ztop1(l-1)) then
+               nn1(iverline)=npoinonver
+               iverline=iverline+1
+               npoinonver=0
+            endif
+            npoinonver=npoinonver+1
+            x1(npoinonver,iverline)=xtop1(l)
+            obr1(npoinonver,iverline)=l
+         enddo
+         nn1(iverline)=npoinonver

@@ -1,0 +1,3 @@
+BIN=grid.exe
+LIBS=""
+EXTRAOBJ="../../SUBR/RAZNOE/alin.o ../../SUBR/RAZNOE/int_best.o"

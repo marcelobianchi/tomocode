@@ -1,0 +1,2 @@
+BIN=visual.exe
+EXTRAOBJ="../../SUBR/CONVERS/decsf.o ../../SUBR/VISUAL/dv_1_grid_v.o ../../SUBR/INVERS/kram3.o ../../SUBR/CRUST/moho_depth.o ../../SUBR/VISUAL/prepare_model_v.o ../../SUBR/CRUST/read_crust.o ../../SUBR/SYNTH/read_ini_model.o ../../SUBR/CONVERS/sfdec.o ../../SUBR/SYNTH/vert_anom.o ../../SUBR/3D_MODEL/vrefmod.o ../../SUBR/SYNTH/read_ini_model_3d.o ../../SUBR/SYNTH/ini_3d_model.o"
