@@ -1,0 +1,636 @@
+#!/bin/bash
+
+# Auto installation part if $1 == install
+if [ $# -ge 1 ]; then
+	if [ "$1" == "install" ]; then
+		folder=""
+		[ -z "$BSHM" ] && echo "Warning: BSHM variable not defined."
+		[ ! -z "$2" ] && folder="$2" || folder="$BSHM"
+		[ -z "$folder" ] && echo "No INSTALL FOLDER found or given" && exit
+		[ ! -d "$folder" ] && echo "INSTALL FOLDER ($folder) is not a folder" && exit
+		[ -f "$folder/tomo.bshm" ] && echo "tomo.bshm already exists in $folder" && exit
+
+		cd `dirname $0`
+		here=`pwd`
+		(cd "$folder" && ln -s "$here/tomo.bshm") || exit
+		echo "File installed @ $folder/tomo.bshm"
+		exit
+	fi
+
+	echo "Invalid option: $*"
+	echo "Valid options are: install [folder]"
+	echo ""
+	exit
+fi
+
+# Setup
+tomobase=""
+[ ! -d "${tomobase}" ] && echo "tomo.bshm: Invalid folder '${tomobase}', please edit tomo.bshm and set the tomoroot folder." && return 1
+export PATH=${tomobase}/SHELL:$PATH
+#
+
+# Setup bash completion
+WLIST="list report plug plugappend plugfig clonemodel cleanmodel cleanfigfiles calcfig freeze saveParams gogmt gofig goreal gosyn godata help ls"
+complete  -A function -W "$WLIST" tomo
+
+#######################################################################################################
+## Main Entrance Point
+#######################################################################################################
+function tomo() {
+    mode="$1" && shift
+
+    case "$mode" in
+  # Status commands))
+        list)           # List available models/areas
+        _list_models
+        ;;
+        report)         # Report pluggedin models
+        _report
+        ;;
+
+  # Connection commands))
+        plug)           # Setup model for computing
+        _plug_model $* && tomo report
+        ;;
+        plugappend)     # Setup model (appending)for computing
+        _plug_model_append $* &&  tomo report
+        ;;
+        plugfig)        # Setup model for figure calculation
+        _plugfig $* && tomo report
+        ;;
+
+  # Model Managenment))
+        clonemodel)
+        _cloneModel $*  # Clone the specified model in the specified area
+        ;;
+        ls)
+        _lsModel $*
+        ;;
+	run)
+	_run
+	;;
+
+  # Clean-up commands))
+        cleanmodel)     # Clean models
+        _cleanmodel
+        ;;
+        cleanfigfiles)  # Clean the FIG_FILES folder
+        _cleanfigfiles
+        ;;
+
+  # Figures manipulations commands))
+        calcfig)        # Compute the figures
+        _calcfig
+        ;;
+        freeze)         # Freeze the figures folder
+        _freezeFig $*
+        ;;
+        saveParams)     # Save the current parameters used into GMTGRIDS folder
+        _saveParams
+        ;;
+
+  # Folder switching commands))
+        godata)          # Move to the current tomobase/DATA folder
+            cd "${tomobase}/DATA/"
+            return
+        ;;
+        gogmt)          # Move to the current GMTGRIDS folder
+            cd "${tomobase}/DATA/$(getfigarea)/$(getfigmodel)/GMTGRIDS/" && echo "Now use the plottomo.sh or the vis5d to see the results."
+            return
+        ;;
+        gofig)          # Move to the FIG_FILES folder
+            cd "${tomobase}/FIG_FILES/"
+            return
+        ;;
+        goreal)         # Move to the start real folder
+            cd "${tomobase}/PROGRAM/START_REAL/"
+            return
+        ;;
+        gosyn)          # Move to the star synt folder
+            cd "${tomobase}/PROGRAM/START_SYNTH/"
+            return
+        ;;
+        *)
+            echo "Valid options are:"
+            egrep "^[ a-Z#]+[)]" $tomobase/SHELL/tomo.bshm | grep -v '*'
+        ;;
+    esac
+}
+
+# Helpers
+[ -z `typeset -F _langoff` ] && function _langoff(){ LANGOFF=$LANG; unset LANG; }
+[ -z `typeset -F _langon`  ] && function _langon() { [ ! -z "$LANGOFF" ] && export LANG=$LANGOFF; }
+[ -z `typeset -F _toupper` ] && function _toupper(){ tr "[:lower:]" "[:upper:]"; }
+[ -z `typeset -F _tolower` ] && function _tolower(){ tr "[:upper:]" "[:lower:]"; }
+#
+function _run() {
+    local model
+    local it
+
+    cd $tomobase/
+    tomo report
+    echo "Starting in 5 s ... "
+    sleep 5
+    tomo cleanfig
+    tomo goreal && ./start_real.exe | tee $tomobase/RUN/log-$(date +%Y-%m-%dT%H:%M:%S).run
+
+    tomo gofig
+    _plugged_models | while read area model it
+    do
+    tomo plugfig $model $it || continue
+    tomo calcfig
+    allgrids.sh
+    done
+}
+
+function _lsModel() {
+    options="$*"
+    _plugged_models | while read area model it
+    do
+    checkmodel "$area" "$model" || continue
+    echo "$area / $model"
+    echo ""
+    ls $* "$tomobase/DATA/$area/$model/" | awk '{print " ",$0}'
+    done
+}
+
+function _cloneModel() {
+    local area=$(echo "$1" | _toupper)
+    local model=$(echo "$2" | _toupper)
+    checkmodel "$area" "$model" || return 1
+
+    nmodel=""
+    while [ -z "$nmodel" -o ${#nmodel} -ne 8 -o -d "$tomobase/DATA/$area/$nmodel" ]; do
+    [ ! -z "$nmodel" -a -d "$tomobase/DATA/$area/$nmodel" ] && echo "Model ($nmodel) in area ($area) already exists"
+    read -p "What is name of the new model (8 characters long)? " nmodel
+    nmodel=$(echo $nmodel | _toupper)
+    done
+    
+    _newbasemodel "$area" "$nmodel" || return 1
+
+    echo "Copying INO_PARAM folder"
+    rsync -av "$tomobase/DATA/$area/$model/INI_PARAM/" "$tomobase/DATA/$area/$nmodel/INI_PARAM/" | awk '{print " ",$0}'
+    
+    if [ -f "$tomobase/DATA/$area/$model/area.dat" ]; then
+    cp -v "$tomobase/DATA/$area/$model/area.dat" "$tomobase/DATA/$area/$nmodel/" | awk '{print " ",$0}'
+    fi
+
+    if [ $(diff "$tomobase/DATA/$area/$model/.real" "$tomobase/DATA/$area/$nmodel/.real" 2>&1 |wc -l) -ne 0 ]; then
+        echo "Please adjust the .real file for fitting your new needs !"
+        echo "It differs from the source model!"
+        diff "$tomobase/DATA/$area/$model/.real" "$tomobase/DATA/$area/$nmodel/.real"
+    fi
+
+    read -p "Plug it?" ans
+    [ $ans == "y" -o $ans == "Y" ] && tomo plug "$area" "$nmodel"
+}
+
+function _newbasemodel() {
+    local area=$(echo $1 | _toupper)
+    local model=$(echo $2 | _toupper)
+
+    checkmodel "$area" "$model" > /dev/null
+    [ $? -eq 0 ] && echo "Area/Model ($area/$model) exists" && return 1
+
+    echo "Creating new model ($model) inside area ($area)"
+    mkdir -p "$tomobase/DATA/$area/$model" || return 1
+    mkdir -p "$tomobase/DATA/$area/$model/INI_PARAM/" || return 1
+    cat << EOF > "$tomobase/DATA/$area/$model/area.dat" || return 1
+XXXXXXXX
+XXXXXXXX
+           X # Iteration number
+           1 4 # How many grids min and max
+           0 # Constant shift in percent
+           0 # Remove the trend of all volume (0,1)
+           0 # Do I hav e a predifined model (0,1)
+           0 
+           0 # Plot earthquakes
+           0 # Add a mask to the results
+EOF
+
+    cat << EOF > "$tomobase/DATA/$area/$model/.real" || return 1
+## Model configuration file
+NumberOfIterations="3" # n as integer
+CodeOfEvents="0"       # 0/1
+OneDOptimization="0"   # 0/1
+EOF
+    return 0
+}
+
+function _cleanmodel() {
+    pushd . > /dev/null
+    _plugged_models | while read area model it
+    do
+        checkmodel "$area" "$model" || continue
+        cd "$tomobase/DATA/$area/$model/"
+        echo -n "I:> $area::$model: "
+        for i in 3D_MODEL GRIDS RESULT TIMES
+        do 
+            [ -d $i ] && echo -n "$i " && rm -rf $i
+        done
+        echo "Done"
+    done
+
+    popd > /dev/null
+}
+
+function _plugged_models() {
+    # Real
+    [ -f "$tomobase/all_areas.dat" ] && awk 'NR>5 {print $1,$2,$3}' "$tomobase/all_areas.dat"
+    # Synt
+    [ -f "$tomobase/kod_syn_all.dat" ] && awk '{
+        if (NR <= 4) next;
+        if (substr($0,1,1) == "_") { if (area!="" && model!="") print area, model, it; area=""; model=""; it=""; next; }
+        if (area == "")  { area=substr($0,1,8);  next; }
+        if (model == "") { split($0,items,"#+"); model=items[1]; it=items[3]; next; }
+    }' "$tomobase/kod_syn_all.dat"
+    return 0
+}
+
+function _plugfig() {
+    local model=$(echo $1 | _toupper)
+    local it=$2
+    local area=$(areafrommodel "$model")
+    checkmodel "$area" "$model" || return 1
+
+    [ -z "$it" ] && echo "Invalid iteration option" && return 1
+    [ ! -s "$tomobase/DATA/$area/$model/area.dat" ] && echo "No source area.dat for plug-in." && return 1
+
+    echo "Plug in: $area::$model (Iteration $it)"
+    cat "$tomobase/DATA/$area/$model/area.dat" |\
+        sed -e "3s/.*#/\t$it #/g" |\
+        sed -e "1s/.*/$area/g" |\
+        sed -e "2s/.*/$model/g" > $tomobase/VISUAL/area.dat 
+}
+
+function areafrommodel() {
+    local area
+    local model=$(echo $1 | _toupper)
+
+    if [ -f "$tomobase/all_areas.dat" ]; then
+    area=$(awk -v area="$model" '$2 == area && NR>=5 {print $1}' $tomobase/all_areas.dat)
+    [ ! -z "$area" ] && echo $area && return 0
+    fi
+
+    if [ -f "$tomobase/kod_syn_all.dat" ]; then
+    area=$(awk -v model="$model" '
+    BEGIN { found=0; } 
+    {
+        if ( model == substr($0,1,8) ) {
+            found = 1;
+            nextfile;
+        }
+        area  == substr($0,1,8);
+    }
+    END { if (found) print area; }' "$tomobase/kod_syn_all.dat")
+    [ ! -z "$area" ] && echo $area && return 0
+    fi
+
+    return 1
+}
+
+function _freezeFig() {
+    local area=$(getfigarea)
+    local model=$(getfigmodel)
+    checkmodel "$area" "$model" || return 1
+
+    [ ! -z "$1" ] && label="~$1" || label=""
+    date=$(date "+%Y%m%d-%H%M%S")
+    destinationfolder="${tomobase}/DATA/${area}/${model}/GMTGRIDS_${date}${label}"
+    sourcefolder="${tomobase}/DATA/${area}/${model}/GMTGRIDS"
+
+    [ -d "$destinationfolder" ] && echo "Folder, $destinationfolder already exist" && return
+    [ ! -d "$(dirname $destinationfolder)" ] && echo "Parent folder, $(dirname $destinationfolder) does not exist" && return
+    [ ! -d "$sourcefolder" ] && echo "Source folder, $sourcefolder does not exist" && return 
+
+    echo -e "Area: $area Model: $model\nSaving .o0) $sourcefolder -> $destinationfolder )0o."
+    [ ! -d "$sourcefolder/PARAMS/" ] && echo "No Parameters found, use the method 'tomo-saveParams' to copy the parameters to fig folder before making a freeze." && return
+
+    mv -v "$sourcefolder" "$destinationfolder" | awk '{print "\tmv ->",$0}'
+    [ ! -z "$*" ] && echo "$*" >> "$destinationfolder/README.TXT"
+
+    echo "Done."
+}
+
+function _saveParams() {
+    local model=$(getfigmodel)
+    local area=$(getfigarea)
+    checkmodel "$area" "$model" || return 1
+
+    sourcefolder="$tomobase/DATA/$area/$model/GMTGRIDS"
+    [ -z "$model" -o -z "$area" ] && echo "Error, getting model/area" && return 1
+    [ ! -d "$sourcefolder" ] && echo "Source folder, $sourcefolder does not exist" && return 1
+    [ -d "$sourcefolder/PARAMS" ] && echo "Parameters already saved for folder $sourcefolder" && return 1
+
+    echo -e "Area: $area Model: $model\nSaving parameters into .o0) $sourcefolder/PARAMS )0o."
+    mkdir -p "$sourcefolder/PARAMS" || return
+
+    cp -rva "$tomobase/DATA/$area/$model/INI_PARAM/" "$sourcefolder/PARAMS" | awk '{print "\tcp ->",$0}'
+    tar cvjf "$sourcefolder/PARAMS/INIDATA.tgz" -C "$tomobase/DATA/$area/" "INIDATA" | awk '{print "\ttar-> ",$0}'
+
+    [ -f "$tomobase/all_areas.dat" ] && cp "$tomobase/all_areas.dat" "$sourcefolder/PARAMS/"
+    [ -f "$tomobase/kod_syn_all.dat" ] && cp "$tomobase/kod_syn_all.dat" "$sourcefolder/PARAMS/"
+    [ -f "$tomobase/VISUAL/area.dat" ] && cp "$tomobase/VISUAL/area.dat" "$sourcefolder/PARAMS/"
+
+    echo "Done."
+    return 0
+}
+
+function _calcfig(){
+    local area=$(getfigarea)
+    local model=$(getfigmodel)
+    checkmodel "$area" "$model" || return 1
+
+    echo ""
+    echo $area $model
+    echo ""
+
+    echo "## Cleaning ########################################################################"
+    _cleanfigfiles 2>&1 | awk '{print " "$0}'
+    echo "####################################################################################"
+
+    echo ""
+    echo "## Horizontal ######################################################################"
+    cd ${tomobase}/VISUAL/HOR_RESULT_NODES && ./visual.exe 2>&1 | awk '{print " "$0}'
+    echo "####################################################################################"
+
+    echo ""
+    echo "## Vertical ########################################################################"
+    cd ${tomobase}/VISUAL/VER_RESULT_NODES && ./visual.exe 2>&1 | awk '{print " "$0}'
+    echo "####################################################################################"
+
+    #echo ""
+    #echo "## Data Cube #######################################################################"
+    #cd ${tomobase}/VISUAL/VISUAL_3D_CUBE && ./visual_3d_cube.exe 2>&1 | awk '{print " "$0}'
+    #echo "####################################################################################"
+
+    type=$(ros "$area" "$model")
+    [ $? -ne 0 ] && echo "Unknow type of $area/$model, aborting" && return 1
+    if [ "${type}" == "s" ]
+    then
+        modeln=$(getnumberfromsynth "$area" "$model")
+
+        echo ""
+        echo "## Synth Hor #######################################################################"
+        cd ${tomobase}/PROGRAM/A_SET_SYN_HOR/ && ./create.exe ${modeln} 2>&1 | awk '{print " "$0}'
+        echo "####################################################################################"
+
+        echo ""
+        echo "## Synth Ver #######################################################################"
+        cd ${tomobase}/PROGRAM/A_SET_SYN_VER/ && ./create.exe ${modeln} 2>&1 | awk '{print " "$0}'
+        echo "####################################################################################"
+
+        #echo ""
+        #echo "## Synth Data Cube #################################################################"
+        #cd ${tomobase}/VISUAL/VISUAL_SYNINI_3D; ./visual_synini_3d.exe 2>&1 | awk '{print " "$0}'
+        #echo "####################################################################################"
+    fi
+ 
+    tomo gofig
+    echo ""
+    echo "WARNING*WARNING*WARNING*WARNING*WARNING*WARNING*WARNING*WARNING*WARNING*"
+    echo "Now you should use the 'allgrids.sh' shell script to collect"
+    echo "all the information to the correct place in the inversion folder."
+    echo "------------------------------------------------------------------------"
+}
+
+function _cleanfigfiles() {
+    [ -z "${tomobase}" ] && echo "Tomobase is not defined" && return
+    pushd . > /dev/null
+    cd "${tomobase}" || return
+    for folder in 3D_MODEL 1DMOD HOR STAT VERT SYN_INI EVENTS 
+    do
+    echo "I:> Cleaning: ${folder}"
+    cd "${tomobase}/FIG_FILES/${folder}" || continue
+    find . -type f -delete
+    done
+    popd > /dev/null
+}
+
+function _report() {
+    echo "Models plugged for real inversion"
+    echo ""
+    if [ -f "${tomobase}/all_areas.dat" ]; then
+    awk 'BEGIN {ct=0} 
+         NR > 5 {ct++; printf " A: %8s M: %8s Nit: %02d Koe: %01d UmDOpt: %01d\n",$1,$2,$3,$4,$5}
+         END {if (ct == 0) print " - No models plugged in - "}' "${tomobase}/all_areas.dat"
+    else
+    echo " - No models plugged in - " 
+    fi
+    echo ""
+
+    echo "Models plugged for Synt inversion"
+    echo ""
+    if [ -f "${tomobase}/kod_syn_all.dat" ]; then
+    awk 'BEGIN {ct=0}
+         {
+         if (NR == 1) {
+            niv = $1;
+            printf "Total of %d inversions plugged\n\n",niv;
+         } else if (NR > 4) {
+            if (substr($0,1,1) == "_") {
+                printf " A: %8s (%8s) M: %8s (%8s) Nit: %02d UmDOpt: %d\n",area,basearea,model,basemodel,nit,umdopt;
+                area = ""; model = ""; ct += 1; next;
+            }
+            if (area == "") {
+                split($0,items,"#+");
+                area = items[1];
+                basearea = items[2];
+                next;
+            }
+            if (model == "") {
+                split($0,items,"#+");
+                model = items[1];
+                basemodel = items[2];
+                nit = items[3];
+                umdopt = items[4];
+                next;
+            }
+            print "Error parsing file @ ",$0
+         }
+         }
+         END {if (ct == 0) print " - No models plugged in - "}
+        ' "${tomobase}/kod_syn_all.dat"
+    else
+    echo " - No models plugged in - " 
+    fi
+    echo ""
+
+    echo "Model plugged for Figure calculation"
+    echo ""
+    if [ -f "$tomobase/VISUAL/area.dat" ]; then
+        echo " A: $(getfigarea) M: $(getfigmodel) It: $(getfigit)"
+    else
+        echo " - No models plugged in - " 
+    fi
+    echo ""
+}
+
+function _plug_model() {
+    local area=$(echo $1 | _toupper)
+    local model=$(echo $2 | _toupper)
+    checkmodel "$area" "$model" || return 1
+    
+    type=$(ros "$area" "$model")
+    [ $type == "r" ] && newareafile && _plug_model_append_real "$area" "$model" && return $?
+    [ $type == "s" ] && return 1
+}
+
+function _plug_model_append() {
+    local area=$(echo $1 | _toupper)
+    local model=$(echo $2 | _toupper)
+    checkmodel "$area" "$model" || return 1
+    
+    type=$(ros "$area" "$model")
+    [ $type == "r" ] && _plug_model_append_real "$1" "$2" && return $?
+    [ $type == "s" ] && _plug_model_append_synt "$1" "$2" && return $?
+}
+
+function _plug_model_append_synt() {
+    local area=$(echo $1 | _toupper)
+    local model=$(echo $2 | _toupper)
+    checkmodel "$area" "$model" "s" || return 1
+    echo "Not fully imple"
+}
+
+function _plug_model_append_real() {
+    local area=$(echo $1 | _toupper)
+    local model=$(echo $2 | _toupper)
+    checkmodel "$area" "$model" "r" || return 1
+
+    # Create a new one if needed
+    [ ! -f "$tomobase/all_areas.dat" ] && echo "Cannot append, creating new" && newareafile
+
+    # Check that area/model is not plugged
+    ct=$(awk -v area=$area -v model=$model '$1==area && $2==model {print $0}' $tomobase/all_areas.dat | wc -l)
+    [ $ct -gt 0 ] && echo "Area ($area) Model ($model) already plugged $ct times" && return 1
+
+    # Load parameters
+    source "$tomobase/DATA/$area/$model/.real"
+
+    # Plug
+    echo "$area $model $(nit) $(koe) $(onedopt)" >> ${tomobase}/all_areas.dat
+
+    return 0
+}
+
+function _list_models() {
+    pushd . > /dev/null
+    cd "${tomobase}/DATA" || return
+
+    echo ""
+    echo "Current Models available in '$tomobase/DATA/'"
+    current=""
+    find . -mindepth 2 -maxdepth 2 -type d -path './????????/????????' | awk -F"/" '{print $2,$3}' | while read area model
+    do
+        if [ "$current" != "$area" ]; then
+            echo -e "\n$area \\"
+            current="${area}"
+        fi
+        echo "         |- ${model}"
+    done
+    echo ""
+    popd > /dev/null
+}
+
+##
+
+function checkmodel() {
+    [ -z "$1" ] && echo "Area cannot be empty" && return 1
+    [ -z "$2" ] && echo "Model cannot be empty" && return 1
+    [ ! -d "$tomobase/DATA/$1/$2/" ] && echo "Area/Model = $1/$2 is invalid" && return 1
+    [ ! -z "$3" -a "$3" == "r" -a ! -f "$tomobase/DATA/$1/$2/.real" ] && echo "$1/$2 is not a valid real/synt model" && return 1
+    [ ! -z "$3" -a "$3" == "s" -a ! -f "$tomobase/DATA/$1/$2/.synt" ] && echo "$1/$2 is not a valid real/synt model" && return 1
+    return 0
+}
+
+function newareafile() {
+    cat << EOF > ${tomobase}/all_areas.dat
+1: code of the region (any 8 characters)
+2: number of iterations
+3: 0 all data, 1 odd events, 2 even events
+4: kode For ref. mod. optimization. 1-yes
+**********************************************
+EOF
+    return 0
+}
+
+function ros() {
+    [ -f "$tomobase/DATA/$1/$2/.real" ] && echo "r" && return 0
+    [ -f "$tomobase/DATA/$1/$2/.synt" ] && echo "s" && return 0
+    return 1
+}
+
+function nit() {
+    #number of iterations
+    value=3
+    [ ! -z "$NumberOfIterations" ] && value=${NumberOfIterations}
+    echo "$value"
+}
+
+function koe() {
+    #0 all data, 1 odd events, 2 even events
+    value=0
+    [ ! -z "$CodeOfEvents" ] && value=${CodeOfEvents}
+    echo "$value"
+}
+
+function onedopt() {
+    #kode For ref. mod. optimization. 1-yes
+    value=0
+    [ ! -z "$OneDOptimization" ] && value=${OneDOptimization}
+    echo "$value"
+}
+
+function getfigmodel(){
+    [ ! -f "${tomobase}/VISUAL/area.dat" ] && return
+    awk 'NR==2 {print $1}' "${tomobase}/VISUAL/area.dat"
+}
+
+function getfigarea(){
+    [ ! -f "${tomobase}/VISUAL/area.dat" ] && return
+    awk 'NR==1 {print $1}' "${tomobase}/VISUAL/area.dat"
+}
+
+function getfigit(){
+    [ ! -f "$tomobase/VISUAL/area.dat" ] && return
+    awk 'NR==3 {print $1}' "$tomobase/VISUAL/area.dat"
+}
+
+function getnhor() {
+ [ ! -f "$tomobase/DATA/$area/$model/INI_PARAM/sethor.dat" ] && echo "Invalid $area/$model folder" && return 1
+ awk 'NR==1 {print $1}' "$tomobase/DATA/$area/$model/INI_PARAM/sethor.dat"
+}
+
+function getnver() {
+ [ ! -f "$tomobase/DATA/$area/$model/INI_PARAM/setver.dat" ] && echo "Invalid $area/$model folder" && return 1
+ awk 'NR==1 {print $1}' "$tomobase/DATA/$area/$model/INI_PARAM/setver.dat"
+}
+
+function getnumberfromsynth() {
+    local area=$(echo $1 | _toupper)
+    local model=$(echo $2 | _toupper)
+    checkmodel "$area" "$model" "s" || return 1
+    awk -v area="$area" -v model="$model" '
+    BEGIN {
+        ct=1;
+        aok=0;
+        found=0;
+    } 
+    {
+        if (substr($0,0,1) == "_") {
+            ct+=1;
+            next;
+        }
+        if ( area  == substr($0,1,8) ) {
+            aok = 1;
+            next;
+        }
+        if ( aok == 1 && model == substr($0,1,8) ) {
+            found = 1;
+            nextfile;
+        }
+        aok = 0;
+    }
+    END { if (found) print ct; }' $tomobase/kod_syn_all.dat
+}

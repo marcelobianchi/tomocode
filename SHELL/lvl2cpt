@@ -1,0 +1,35 @@
+#!/bin/bash
+
+sourcecpt="$1"
+
+
+awk  'NR>3{print $1}' $sourcecpt  > p1
+awk -F"\"" 'NR>3{print $6}'  $sourcecpt > p2
+ 
+echo "# COLOR_MODEL = RGB" 
+cat p2 |\
+  sed -e 's/Deep Navy Blue/R11 G0 B241/g' |\
+  sed -e 's/Black/R0 G0 B0/g' |\
+  sed -e 's/Dark Brown/R80 G10 B10/g' |\
+  awk '{printf "%03d\t%03d\t%03d\n",substr($1,2),substr($2,2),substr($3,2)}' |\
+  paste p1 - |\
+  awk -v edge=$which '{
+   if (NR > 1) {
+     printf "%8.4f\t%s\t%8.4f\t%s\n",oldv, old, $1, old
+     oldv=$1;
+     old=$2" "$3" "$4;
+   } else {
+     oldv=-1*edge
+     old=$2" "$3" "$4;
+   }
+  } END {
+   if (oldv != edge) {
+    print "Error";
+   }
+  }'
+ 
+echo -e "B\t0\t0\t0"
+echo -e "F\t0\t0\t0"
+echo -e "N\t220\t220\t220"
+ 
+rm p1 p2
