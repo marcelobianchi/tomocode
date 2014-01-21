@@ -31,7 +31,7 @@ read(1,*,err=33)koe
 !re='Ugd_tele'
 !ar='real_011'
 
-write(*,*)' ar=',ar		! code of the area
+write(*,*) ' re= ',re,' ar=',ar		! code of the area
 
 
 !******************************************************************
@@ -99,7 +99,7 @@ close(1)
 
 
 call prepare_ref(re,ar)
-
+write (*,*) 'Reading Stations ' 
 open (1,file='../../DATA/'//re//'/INIDATA/stations_local.dat')
 open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/stat_xy.dat')
 	ist=1

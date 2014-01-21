@@ -92,7 +92,7 @@ izt=0
 nray=0
 open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_loc0.dat',form='binary')
 open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/rays0.dat',form='binary')
-open(12,file='../../fig_files/1dmod/'//re//ar//'_best_events.dat')
+open(12,file='../../FIG_FILES/1DMOD/'//re//ar//'_best_events.dat')
 11	read(1,end=12)xzt,yzt,zzt,nkrat
 	izt=izt+1
 	do i=1,nkrat

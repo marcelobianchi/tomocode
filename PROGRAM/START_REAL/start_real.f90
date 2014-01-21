@@ -4,8 +4,14 @@ character*1 rg_all(100),rg,it
 integer kod_loc(10),kod_iter(10),kod_oe(10),kod_rf(10)
 integer pausing
 
+! Variables used to select the model
+! from the argument to the program
+integer start,end
+integer whichmodel, narg, iargc
+character parinput
+
 ! Define if you want to pause at every stage
-pausing=1
+pausing=0
 
 open(1, file='../../all_areas.dat')
 do i=1,5
@@ -13,21 +19,38 @@ do i=1,5
 end do
 do i=1,10
 	read(1,'(a8,1x,a8,3(1x,i1))',end=7)re_all(i),ar_all(i),kod_iter(i),kod_oe(i),kod_rf(i)
-	write(*,*)re_all(i),ar_all(i),kod_iter(i),kod_rf(i)
+	write(*,*)re_all(i),' ',ar_all(i),kod_iter(i),kod_rf(i)
 end do	
 7 close(1)
 n_ar=i-1
 write(*,*)' n_ar=',n_ar
 
+!Defaults
+start=1
+end=n_ar
+
+!Decide the model to run
+narg=iargc()
+IF (narg.GE.1) THEN
+ CALL getarg (1,parinput)
+ READ(parinput,*) whichmodel
+ IF ((n_ar.LT.whichmodel).OR.(whichmodel.LE.0)) THEN
+  WRITE(*,*) 'Model indicated does not exist'
+  STOP
+ ENDIF
+ start=whichmodel
+ end=whichmodel
+ENDIF
+
 ! Check all the areas:
-do iar=1,n_ar
+do iar=start,end
 	re=re_all(iar)
 	ar=ar_all(iar)
 	niter=kod_iter(iar)
 	koe=kod_oe(iar)
 	kref=kod_rf(iar)
 
-	write(*,*) 'New Area: ', ar
+	write(*,*) 'New Area: ', ar, 'Niter: ',niter
 	call createdir('..\..\DATA\'//re//'\'//ar//'\3D_MODEL')
 	call createdir('..\..\DATA\'//re//'\'//ar//'\GRIDS')
 	call createdir('..\..\DATA\'//re//'\'//ar//'\RESULT')
@@ -116,7 +139,7 @@ do iar=1,n_ar
 		write(*,*)'location in optimized 1D model'
 		write(*,*) '*************************************'
 
-		i=runcommand('..\..\LIN_PROG\1_loc_event\locate.exe')
+		i=runcommand('..\..\LIN_PROG\1_LOC_EVENT\locate.exe')
 		if (pausing.eq.1) pause
 	end if
 

@@ -153,6 +153,7 @@ ntot=0
 
 ! Read the sources:
 992	continue
+	write(*,*) 'New Event nev=',izt
 	read(1,*,end=991)fini,tini,zini,nkrat
 
 	call SFDEC(fini,tini,zini,xold,yold,zold,fi0,tet0)
@@ -229,7 +230,10 @@ ntot=0
 	!end do
 	!pause
 
-	if(nkrat.lt.krat_min) goto 992
+	if(nkrat.lt.krat_min) then
+	  write(*,*) ' Abort nev nkrat=',nkrat,' too low nkratmin=',krat_min
+	  goto 992
+	 endif
 
 	dismin=9999999
 	do i=1,nst
@@ -237,7 +241,10 @@ ntot=0
 		if(hordist.lt.dismin) dismin=hordist
 	end do
 	!write(*,*)' dismin 1111=',dismin
-	if(dismin.gt.dist_max) goto 992
+	if(dismin.gt.dist_max) then
+	   write(*,*) ' Abort distance dst=',dismin,' larger than dist_max =',dist_max
+	   goto 992
+	 endif
 
 	xmin=xold	!+300
 	ymin=yold	!-300
@@ -247,7 +254,7 @@ ntot=0
 	zlim=z_lim(fff,ttt)
 	if(h.ge.zlim) h=zlim-1
 
-
+	write(*,*) ' Inverting ',nkrat,' picks @ ',dismin,' distance'
 	do iter=1,niter_loc
 
 		res_loc1=res_it1(iter)

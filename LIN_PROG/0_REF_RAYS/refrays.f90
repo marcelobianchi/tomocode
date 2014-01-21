@@ -3,10 +3,13 @@ character*1 rm
 real tref(100000),dref(100000),alref(100000),href(100000)
 real hmod(600),vmodp(600),vmods(600) ! ref. models in different zones
 real zst(20),dzst(20),dst(10),ddist(10)
+integer maxnref
+
 
 common/refmod/nrefmod,hmod,vmodp,vmods
 common/pi/pi,per
 
+maxnref=0
 one=1.d0
 pi=asin(one)*2.d0
 per=pi/180.d0
@@ -120,6 +123,7 @@ open(11,file='../../DATA/'//gr//'/'//ar//'/TIMES/table.dat',form='binary')
 				
 		end do
 		!close(31)
+		if (nref.GE.maxnref) maxnref = nref
 		write(11)zzt,nref
 		!write(*,*)zzt,nref		
 		if(mod(izt,10).eq.0) write(*,*)' i=',izt,' z=',zzt,' ips=',ips,' nref=',nref
@@ -131,5 +135,6 @@ open(11,file='../../DATA/'//gr//'/'//ar//'/TIMES/table.dat',form='binary')
 	end do
 goto 34
 35 close(11)
+write (*,*) 'Max Nref= ',maxnref
 stop
 end 

@@ -53,7 +53,7 @@ nrefmod=i-1
 !write(*,*)' nrefmod=',nrefmod
 
 if(iter.eq.1) then
-	open(21,file='../../FIG_files/1dmod/ref_start.bln')
+	open(21,file='../../FIG_FILES/1DMOD/ref_start.bln')
 	write(21,*)nrefmod
 	do i=1,nrefmod
 		write(21,*)vmodp(i),-hmod(i)
@@ -349,7 +349,7 @@ end do
 
 close(11)
 
-open(21,file='../../FIG_files/1dmod/ref'//it1//'.bln')
+open(21,file='../../FIG_FILES/1DMOD/ref'//it1//'.bln')
 write(21,*)nvel
 do i=1,nvel+iz0
 	write(21,*)vpnew(i),-hnew(i)

@@ -3,6 +3,7 @@ character*8 ar,re,line
 character*1 rg_all(100),rg,it
 integer kod_loc(10),kod_iter(10),kod_oe(10)
 
+pausing=0
 
 open(1,file='../../model.dat')
 read(1,'(a8)')re		! code of the area
@@ -14,7 +15,8 @@ read(1,*)niter
 close(1)
 write(*,*)' number of iterations:',niter
 
-i=system('../../1D_MODEL/1_select/select.exe')
+i=system('../../1D_MODEL/1_SELECT/select.exe')
+if (pausing.EQ.1) pause
 
 !******************************************************************
 	
@@ -30,19 +32,23 @@ do iter=1,niter
 
 	write(*,*)'	 ****************************************************'
 	write(*,*)'	 Reference table:'
-	i=system('../../1D_MODEL/2_reftable/refrays.exe')
+	i=system('../../1D_MODEL/2_REFTABLE/refrays.exe')
+        if (pausing.EQ.1) pause
 
 	write(*,*)'	 ****************************************************'
 	write(*,*)'	 Source location:'
-	i=system('../../1D_MODEL/3_locate/locate.exe')
+	i=system('../../1D_MODEL/3_LOCATE/locate.exe')
+        if (pausing.EQ.1) pause
 
 	write(*,*)'	 ****************************************************'
 	write(*,*)'	 Matrix calculation:'
-	i=system('../../1D_MODEL/4_matr/matr.exe')
+	i=system('../../1D_MODEL/4_MATR/matr.exe')
+        if (pausing.EQ.1) pause
 
 	write(*,*)'	 ****************************************************'
 	write(*,*)'	 Inversion:'
-	i=system('../../1D_MODEL/5_invers/invers.exe')
+	i=system('../../1D_MODEL/5_INVERS/invers.exe')
+        if (pausing.EQ.1) pause
 
 end do ! Different iterations
 write(it,'(i1)')niter
