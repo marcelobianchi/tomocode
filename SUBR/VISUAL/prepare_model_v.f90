@@ -24,7 +24,7 @@ do i=1,10000
 end do
 573 continue
 write(*,*)' cannot find ORIENTATIONS in major_param.dat!!!'
-pause
+call pause()
 574 read(1,*)nornt
 read(1,*)(ornt(i),i=1,nornt)
 close(1)
@@ -70,14 +70,14 @@ end do
 !	write(21,*)fi,tet
 !end do
 !close(21)
-!pause
+!call pause()
 
 open(1,file='../../DATA/'//re//'/'//ar//'/GRIDS/obr'//ps//gr//'.dat')
 read(1,*) nobr
 if(nobr.gt.100000) then
 	write(*,*)' nobr=',nobr
 	write(*,*)' One should increase size of dv_mod'
-	pause
+	call pause()
 end if
 close(1)
 

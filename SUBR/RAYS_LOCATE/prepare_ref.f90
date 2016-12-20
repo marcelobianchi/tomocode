@@ -21,7 +21,7 @@ goto 82
 nrefmod=i-1
 !write(*,*)' nrefmod=',nrefmod
 
-open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/table.dat',form='binary')
+open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/table.dat',form='unformatted')
 izt=0
 nrmax=0
 34	continue

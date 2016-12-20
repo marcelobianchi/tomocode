@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=start_real.o 
-OBJ+=
+OBJ+= ../../SUBR/OTHERS/pause.o
 BIN=start_real.exe
 
 %.o:%.f90

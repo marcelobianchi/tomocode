@@ -8,7 +8,7 @@ nnetf=0
 
 do ips=1,2
     write(ps,'(i1)')ips 
-    open(1,file='../../DATA/'//re//'/INIDATA/dv3d_'//ps//'.dat',form='binary')
+    open(1,file='../../DATA/'//re//'/INIDATA/dv3d_'//ps//'.dat',form='unformatted')
     read(1,err=123)fmin3D,df3D,nnetf
     read(1)tmin3D,dt3D,nnett
     read(1)zmin3D,dz3D,nnetz

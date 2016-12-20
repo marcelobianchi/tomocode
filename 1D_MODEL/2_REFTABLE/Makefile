@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=refrays.o 
-OBJ+=../../SUBR/1D_TRACING/reftrace.o ../../SUBR/1D_TRACING/vrefmod.o
+OBJ+=../../SUBR/1D_TRACING/reftrace.o ../../SUBR/1D_TRACING/vrefmod.o ../../SUBR/OTHERS/pause.o
 BIN=refrays.exe
 
 %.o:%.f90

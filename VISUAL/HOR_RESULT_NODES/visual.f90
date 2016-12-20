@@ -33,7 +33,7 @@ per=pi/180.e0
 rz=6371.
 
 w_limit=0.2
-
+	
 igr=1
 
 
@@ -198,7 +198,7 @@ close(1)
 if(ind_srce.ne.0) then
 	nzzt=0
 	nzt=0
-	open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat',form='binary')
+	open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat',form='unformatted')
 	872	read(1,end=871)xzt,yzt,zzt,nkrat,key_reloc
 	do ikr=1,nkrat
 		read(1,end=871)i1,i2,a1,a2

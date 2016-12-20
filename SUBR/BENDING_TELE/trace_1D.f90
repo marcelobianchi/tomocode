@@ -161,7 +161,7 @@ do ii=2,npath1
 		np=np+1
 		if (np.gt.10000) then
 			write(*,*) 'np > 10000'
-			pause
+			call pause()
 			cycle
 		end if
 		dray2(np)=(d1+iii*dd)/Rz
@@ -213,7 +213,7 @@ do ii=1,npath2
 	y3=sin(dd)
 	z3=cos(dd)
 	!write(*,*)' y3=',y3,' z3=',z3
-	!pause
+	!call pause()
 
 	x33=x3*cosf + y3*sinf
 	y33=-x3*sinf + y3*cosf
@@ -256,7 +256,7 @@ do ii=1,npath2
 
 end do
 
-!pause
+!call pause()
 
 ! time along the ray
 ddd=0

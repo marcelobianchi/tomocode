@@ -50,7 +50,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 
 554 read(1,*)fi0,tet0
 close(1)
@@ -97,9 +97,9 @@ nst=0
 44	close(1)
 write(*,*)' nst=',nst
 
-open(11,file='../../TMP/matr_1d.dat',form='binary')
+open(11,file='../../TMP/matr_1d.dat',form='unformatted')
 
-open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays'//it1//'.dat',form='binary')
+open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays'//it1//'.dat',form='unformatted')
 
 nzt=0
 nray=0
@@ -160,7 +160,7 @@ nonz_tot=0
 		!do il=1,npray
 		!	write(*,*)xray(il),yray(il),zray(il)
 		!end do
-		!pause
+		!call pause()
 		amat1=0
 		do il=2,npray
 			!write(*,*)' il=',il

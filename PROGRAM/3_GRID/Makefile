@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=grid.o 
-OBJ+=../../SUBR/RAZNOE/alin.o ../../SUBR/RAZNOE/int_best.o
+OBJ+=../../SUBR/RAZNOE/alin.o ../../SUBR/RAZNOE/int_best.o ../../SUBR/OTHERS/pause.o
 BIN=grid.exe
 
 %.o:%.f90

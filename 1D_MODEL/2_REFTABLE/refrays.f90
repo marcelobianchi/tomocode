@@ -30,7 +30,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find REF_PARAM in 1Dmod_PARAM.DAT!!!'
-pause
+call pause()
 
 
 554 read(1,*)
@@ -74,7 +74,7 @@ izt=0
 dmin=ddist(1)
 
 
-open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/table.dat',form='binary')
+open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/table.dat',form='unformatted')
 !	do zzt=zztmin,zztmax,dzzt
 34	zzt=zzt+dzzt
 	if(zzt.gt.zztmax) goto 35
@@ -97,10 +97,10 @@ open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/table.dat',form='binary')
 			call reftrace(alfa0,zzt,zout,ips,1,  time,dist,hmax)
 			if (time.gt.0) then
 				!write(*,*)alfa0,dist,time,hmax
-				!pause
+				!call pause()
 			end if
 			dgrad=(dist/rz)/per
-			!pause
+			!call pause()
 		!	if (hmax.ge.hmod(nrefmod-1)) exit
 			if(dist.lt.0.) cycle
 			dkm=dist
@@ -119,7 +119,7 @@ open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/table.dat',form='binary')
 				href(nref)=hmax
 				dlast=dkm
 				!write(*,*)nref,alfa0,dist,time,hmax
-				!pause
+				!call pause()
 				!write(31,*)nref,alfa0,dkm,time,hmax
 			end if
 			if (hmax.gt.depmax)exit 
@@ -129,12 +129,12 @@ open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/table.dat',form='binary')
 		!close(31)
 		write(11)zzt,nref
 		if(mod(izt,10).eq.0)write(*,*)' i=',izt,' z=',zzt,' ips=',ips,' nref=',nref
-		!pause
+		!call pause()
 		do i=1,nref
 			write(11)dref(i),tref(i),alref(i),href(i)
 			!write(*,*)dref(i),tref(i),alref(i),href(i)
 		end do
-		!pause
+		!call pause()
 	end do
 goto 34
 35 close(11)

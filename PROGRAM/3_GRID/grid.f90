@@ -41,7 +41,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 write(*,*)fi0,tet0
 close(1)
@@ -54,7 +54,7 @@ do i=1,10000
 end do
 533 continue
 write(*,*)' cannot find GRID_PARAMETERS in major_param.dat!!!'
-pause
+call pause()
 534 continue
 read(1,*)xlim1,xlim2,dxpl
 read(1,*)ylim1,ylim2,dypl
@@ -116,7 +116,7 @@ do iiips=1,2
 
 	sumtotal=0.
 	nonzer=0
-	open(1,file='../../TMP/plotray'//ppss//gr//'.dat',form='binary')
+	open(1,file='../../TMP/plotray'//ppss//gr//'.dat',form='unformatted')
 	do iy=1,nypl
 		read(1)((plotray(ix,iy,iz),ix=1,nxpl),iz=1,nzpl)
 	!	write(*,'(10f7.2)')((plotray(ix,iy,iz),ix=1,nxpl),iz=1,nzpl)
@@ -169,7 +169,7 @@ do iiips=1,2
 		!write(*,*)iy,' sumtot=',sumtot(iy),' nbl_y=',nbl_y(iy)
 
 	end do
-	!pause
+	!call pause()
 
 	sumtot=100 * sumtot/summm
 	!write(*,*)' summ=',summm
@@ -475,7 +475,7 @@ do iiips=1,2
 
 				!if(zgv(i).gt.100..and.kodgv(i).eq.1) then
 					!write(*,*)xnod,zgv(i),kodgv(i)
-					!pause
+					!call pause()
 				!end if
 				!if (igv.gt.100)write(*,*)xnod,zgv(i),kodgv(i)
 				ival(node,iy)=kodgv(i)
@@ -485,7 +485,7 @@ do iiips=1,2
 			zgrd(node,iy)=zlim2
 			ival(node,iy)=0
 
-			!pause
+			!call pause()
 
 		end do		
 
@@ -645,7 +645,7 @@ do iiips=1,2
 		!write(*,*) 'next'
 	end do
 	write(*,*)' npop=',npop
-	!pause
+	!call pause()
 
 	! The last y-level with zero values of grid
 	write(12,*)inw
@@ -668,13 +668,13 @@ do iiips=1,2
 	!	nurrr=obr(i,2)
 	!	ipop=popor(iuzz,nurrr)
 	!	write(*,*)iuzz,nurrr,i,ipop
-	!	pause
+	!	call pause()
 	!end do
 	close(11)
 	close(12)
 	close(13)
 	close(14)
-!pause
+!call pause()
 end do
 
 

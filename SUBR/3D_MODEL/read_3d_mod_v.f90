@@ -19,7 +19,7 @@ dv_3D=0
 
 do ips=1,2
 	write(ps,'(i1)')ips
-	open(1,file='../../DATA/'//re//'/'//ar//'/3D_MODEL/dv_v'//ps//it//'.dat',form='binary')
+	open(1,file='../../DATA/'//re//'/'//ar//'/3D_MODEL/dv_v'//ps//it//'.dat',form='unformatted')
 
 	read(1,end=13)xx10,nxx0,dxx0
 	!write(*,*)xx10,nxx0,dxx0
@@ -27,7 +27,7 @@ do ips=1,2
 	if(nxx0.gt.nxmax) then
 		write(*,*)' nxx > nxmax!'
 		write(*,*)' Value of the nxx in common file "mod_3D" should be increased'
-		pause
+		call pause()
 	end if
 	xx1=xx10
 	nxx=nxx0
@@ -37,7 +37,7 @@ do ips=1,2
 	if(nyy.gt.nymax) then
 		write(*,*)' nyy > nymax!'
 		write(*,*)' Value of the nyy in common file "mod_3D" should be increased'
-		pause
+		call pause()
 	end if
 
 
@@ -45,7 +45,7 @@ do ips=1,2
 	if(nzz.gt.nzmax) then
 		write(*,*)' nzz > nzmax!'
 		write(*,*)' Value of the nzz in common file "mod_3D" should be increased'
-		pause
+		call pause()
 	end if
 	!write(*,*)' nzz=',nzz(ips)
 	do izz=1,nzz
@@ -54,7 +54,7 @@ do ips=1,2
 	close(1)
 
 	!write(*,*)' dv_3D(1,92,33,3)=',dv_3D(1,92,33,3)
-	!pause
+	!call pause()
 
 	!write(*,*)' nxx=',nxx,' nyy=',nyy,' nzz=',nzz
 13	continue

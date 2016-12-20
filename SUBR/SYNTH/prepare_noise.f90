@@ -7,7 +7,7 @@ common/noise/a_rand(2),n_perc_out,a_out,a_stat
 common/noise_kod/ kod_noise,iter,red_ps(2),h_shift,z_shift
 
 
-CALL SRAND(123.4567)
+CALL SRAND(1234567)
 
 open(1,file='../../DATA/'//re//'/'//ar//'/INI_PARAM/noise.dat')
 read(1,*)kod_noise		! Average level of noise
@@ -37,7 +37,8 @@ read(1,*)ds
 do i=1,100
 	read(1,*,end=1)hist(1,i),hist(2,i)
 end do
-pause ' Warning: nhist > 100'
+write(*,*) ' Warning: nhist > 100'
+call pause()
 1 nhist=i-1
 close(1)
 

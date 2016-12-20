@@ -35,7 +35,7 @@ do i=1,10000
 end do
 563 continue
 write(*,*)' cannot find 3D_MODEL in major_param.dat!!!'
-pause
+call pause()
 564 continue
 read(1,*) xx1,xx2,dxx 
 read(1,*) yy1,yy2,dyy 
@@ -51,7 +51,7 @@ do i=1,10000
 end do
 573 continue
 write(*,*)' cannot find ORIENTATIONS in major_param.dat!!!'
-pause
+call pause()
 574 read(1,*)nornt
 close(1)
 !******************************************************************
@@ -91,7 +91,7 @@ close(1)
 do ips=1,2
 	write(ps,'(i1)')ips
 	if(nrps(ips).eq.0) then
-		open(11,file='../../DATA/'//re//'/'//ar//'/3D_MODEL/dv_v'//ps//it//'.dat',form='binary')
+		open(11,file='../../DATA/'//re//'/'//ar//'/3D_MODEL/dv_v'//ps//it//'.dat',form='unformatted')
 		write(11)0,0,0
 		write(11)0,0,0
 		write(11)0,0,0
@@ -185,7 +185,7 @@ do ips=1,2
 	end do		! izz=1,nzz
 
 
-	open(11,file='../../DATA/'//re//'/'//ar//'/3D_MODEL/dv_v'//ps//it//'.dat',form='binary')
+	open(11,file='../../DATA/'//re//'/'//ar//'/3D_MODEL/dv_v'//ps//it//'.dat',form='unformatted')
 	write(11)xx1,nxx,dxx
 	write(11)yy1,nyy,dyy
 	write(11)zz1,nzz,dzz
@@ -197,7 +197,7 @@ do ips=1,2
 	!write(*,*)' dv_3D(86,25,10)=',dv_3D(86,25,10)
 
         ! BIANCHI -- writiing data for the opendtect.
-	!open(11,file='../../DATA/'//re//'/'//ar//'/3D_MODEL/dv_v'//ps//it//'OD.dat',form='binary')
+	!open(11,file='../../DATA/'//re//'/'//ar//'/3D_MODEL/dv_v'//ps//it//'OD.dat',form='unformatted')
         !do iyy=1,nyy
         ! do ixx=1,nxx
    	!   do izz=1,nzz

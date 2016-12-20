@@ -23,25 +23,25 @@ read(1,*)zmin,zmax
 close(1)
 
 
-open(1,file='../../DATA/'//ar//'/3D_MODEL/dv'//it//'.dat',form='binary')
+open(1,file='../../DATA/'//ar//'/3D_MODEL/dv'//it//'.dat',form='unformatted')
 read(1)nzz
 if(nzz.gt.nzmax) then
 	write(*,*)' nzz > nzmax!'
 	write(*,*)' Value of the nzz in common file "mod_3D" should be increased'
-	pause
+	call pause()
 end if
 read(1)(hlev(i),i=1,nzz)
 read(1)xx1,nxx,dxx
 if(nxx.gt.nxmax) then
 	write(*,*)' nxx > nxmax!'
 	write(*,*)' Value of the nxx in common file "mod_3D" should be increased'
-	pause
+	call pause()
 end if
 read(1)yy1,nyy,dyy
 if(nyy.gt.nymax) then
 	write(*,*)' nyy > nymax!'
 	write(*,*)' Value of the nyy in common file "mod_3D" should be increased'
-	pause
+	call pause()
 end if
 do ips=1,2
 	do ilev=1,nzz

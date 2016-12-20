@@ -26,7 +26,7 @@ do iz=1,izttab
 end do
 write(*,*)' cannot find for the following z:'
 write(*,*)' zzt=',depzt
-pause
+call pause()
 return
 1 continue
 !write(*,*)' depzt=',depzt,' z1=',z1,' z2=',z2
@@ -60,7 +60,7 @@ istep=0
 		time3(istep,ikrat)=t1+((t2-t1)/(d2-d1))*(distkm-d1)
 		hmax3(istep,ikrat)=h1+((h2-h1)/(d2-d1))*(distkm-d1)
 !write(*,*)time3(istep,ikrat),alfa3(istep,ikrat),hmax3(istep,ikrat)
-		!pause
+		!call pause()
 	end do
 	ikr3(istep)=ikrat
 21	continue
@@ -110,7 +110,7 @@ tall(ik3)=t1+((t2-t1)/(z2-z1))*(depzt-z1)
 hall(ik3)=h1+((h2-h1)/(z2-z1))*(depzt-z1)
 
 !write(*,*)' ik3=',ik3,' a=',aall(ik3),' t=',tall(ik3),' h=',hall(ik3)
-!pause
+!call pause()
 
 if(ik3.lt.ikmin) goto 11
 

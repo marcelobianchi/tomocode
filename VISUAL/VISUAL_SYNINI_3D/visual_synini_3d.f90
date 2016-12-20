@@ -31,7 +31,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 close(1)
 
@@ -70,7 +70,7 @@ do i=1,10000
 end do
 563 continue
 write(*,*)' cannot find 3D_MODEL in major_param.dat!!!'
-pause
+call pause()
 564 continue
 read(1,*) xx1,xx2,dxx 
 read(1,*) yy1,yy2,dyy 
@@ -129,7 +129,7 @@ do ips=1,2
 
 	end DO
 	
-	open(11,file='../../FIG_FILES/3D_MODEL/vref_syn_3d_'//ps//'.dat',form='binary')
+	open(11,file='../../FIG_FILES/3D_MODEL/vref_syn_3d_'//ps//'.dat',form='unformatted')
 	write(11)xx1,nxx,dxx
 	write(11)yy1,nyy,dyy
 	write(11)zz1,nzz,dzz
@@ -139,7 +139,7 @@ do ips=1,2
 	end do
 	close(11)
 	
-	open(11,file='../../FIG_FILES/3D_MODEL/vsyn_3d_'//ps//'.dat',form='binary')
+	open(11,file='../../FIG_FILES/3D_MODEL/vsyn_3d_'//ps//'.dat',form='unformatted')
 	write(11)xx1,nxx,dxx
 	write(11)yy1,nyy,dyy
 	write(11)zz1,nzz,dzz
@@ -149,7 +149,7 @@ do ips=1,2
 	end do
 	close(11)
 
-	!open(11,file='../../FIG_FILES/3D_MODEL/vsyn_3d_'//ps//'OD.dat',form='binary')
+	!open(11,file='../../FIG_FILES/3D_MODEL/vsyn_3d_'//ps//'OD.dat',form='unformatted')
         !do iyy=1,nyy
         ! do ixx=1,nxx
    	!   do izz=1,nzz
@@ -159,7 +159,7 @@ do ips=1,2
 	!end do
 	!close(11)
 
-	!open(11,file='../../FIG_FILES/3D_MODEL/vref_syn_3d_'//ps//'OD.dat',form='binary')
+	!open(11,file='../../FIG_FILES/3D_MODEL/vref_syn_3d_'//ps//'OD.dat',form='unformatted')
         !do iyy=1,nyy
         ! do ixx=1,nxx
    	!   do izz=1,nzz
@@ -167,7 +167,7 @@ do ips=1,2
   	!   end do
 	! end do
 	!end do
-	1close(11)
+	!close(11)
 
 
 end do

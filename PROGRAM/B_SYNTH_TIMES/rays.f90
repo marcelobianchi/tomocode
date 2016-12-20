@@ -1,4 +1,4 @@
-USE IFPORT
+! USE IFPORT
 character*8 ar0,ar1,re1,re0,line
 character*1 ps,itt,it0,rm,gr
 common/refmod/nrefmod,hmod(600),vmodp(600),vmods(600)
@@ -34,7 +34,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 close(1)
 
@@ -48,7 +48,7 @@ do i=1,10000
 end do
 583 continue
 write(*,*)' cannot find LOCATE _PARAMETERS in major_param.dat!!!'
-pause
+call pause()
 584 continue
 
 read(1,*)	! Parameters for bending:
@@ -80,7 +80,7 @@ do i=1,10000
 end do
 558 continue
 write(*,*)' cannot find MOHO MODEL in major_param.dat!!!'
-pause
+call pause()
 559 read(1,*)model_crust
 close(1)
 
@@ -127,7 +127,7 @@ goto 82
 nrefmod=i-1
 !write(*,*)' nrefmod=',nrefmod
 
-open(1,file='../../DATA/'//re1//'/'//ar1//'/TIMES/table.dat',form='binary')
+open(1,file='../../DATA/'//re1//'/'//ar1//'/TIMES/table.dat',form='unformatted')
 izt=0
 nrmax=0
 34	continue
@@ -140,13 +140,13 @@ nrmax=0
 			read(1)etab(ips,izt,i),ttab(ips,izt,i),atab(ips,izt,i),rtab(ips,izt,i)
 			!write(*,*)etab(ips,izt,i),atab(ips,izt,i)
 		end do
-		!pause
+		!call pause()
 	end do
 goto 34
 35 close(11)
 izttab=izt-1
 !write(*,*)' izttab=',izttab,' nrmax=',nrmax
-!pause
+!call pause()
 
 
 open(21,file='../../FIG_FILES/1DMOD/ref_true.bln')
@@ -181,9 +181,9 @@ write(*,*)' nst=',nst
 !call SRAND(1.7)
 
 write(*,*)' itt=',itt,' red_ps=',red_ps
-open(1,file='../../DATA/'//re0//'/'//ar0//'/TIMES/rays_p'//itt//'.dat',form='binary')
+open(1,file='../../DATA/'//re0//'/'//ar0//'/TIMES/rays_p'//itt//'.dat',form='unformatted')
 open(10,file='../../DATA/'//re1//'/'//ar1//'/TIMES/rays_loc.dat')
-open(11,file='../../DATA/'//re1//'/'//ar1//'/TIMES/rays_p0.dat',form='binary')
+open(11,file='../../DATA/'//re1//'/'//ar1//'/TIMES/rays_p0.dat',form='unformatted')
 open(12,file='../../DATA/'//re1//'/INIDATA/srces_true.dat')
 open(13,file='../../DATA/'//re1//'/'//ar1//'/TIMES/ztr0.dat')
 open(14,file='../../FIG_FILES/STAT/noise_distr.dat')
@@ -334,7 +334,7 @@ n_gist=0
 	dpcur=dp/np
 	dscur=ds/ns
 	if (mod(nzt,ifreq).eq.0) write(*,*)' nzt=',nzt,' dp=',dpcur,' ds=',dscur,' er=',ddcur
-	!pause
+	!call pause()
 
 
 	goto 21

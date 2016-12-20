@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=Tetrad.o 
-OBJ+=../../SUBR/CONVERS/decsf.o
+OBJ+=../../SUBR/CONVERS/decsf.o ../../SUBR/OTHERS/pause.o
 BIN=tetrad.exe
 
 %.o:%.f90

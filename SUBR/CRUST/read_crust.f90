@@ -53,11 +53,11 @@ else if(nmodel.eq.2.or.nmodel.eq.3) then
 				if(cr_type(icr).eq.crt_ft(ifi,itet)) goto 5
 			end do
 			write(*,*)' cannot find: crt_ft(ifi,itet)=',crt_ft(ifi,itet)
-			pause
+			call pause()
 	5		continue
 			dcr_1(ifi,itet)=d_crust(icr)
 			!write(*,*)' cr=',crt_ft(ifi,itet),' d=',dcr_2(ifi,itet)
-			!pause
+			!call pause()
 		end do
 	end do
 	close(1)
@@ -75,7 +75,7 @@ else if(nmodel.eq.1) then
 
 else
 	write(*,*)' nmodel=',nmodel
-	pause
+	call pause()
 end if
 
 if (nmodel.eq.3) then

@@ -42,12 +42,12 @@ do i=2,nrefmod
 	goto 72
 end do
 write(*,*)' cannot detect Moho'
-pause
+call pause()
 
 72 continue
 write(*,*)'avmoho=',avmoho
 
-open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/table.dat',form='binary')
+open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/table.dat',form='unformatted')
 izt=0
 nrmax=0
 34	continue
@@ -60,12 +60,12 @@ nrmax=0
 			read(1)etab(ips,izt,i),ttab(ips,izt,i),atab(ips,izt,i),rtab(ips,izt,i)
 			!write(*,*)etab(ips,izt,i),atab(ips,izt,i)
 		end do
-		!pause
+		!call pause()
 	end do
 goto 34
 35 close(11)
 izttab=izt-1
 !write(*,*)' izttab=',izttab,' nrmax=',nrmax
-!pause
+!call pause()
 return 
 end

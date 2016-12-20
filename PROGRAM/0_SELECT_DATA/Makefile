@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=select.o 
-OBJ+=../../SUBR/CONVERS/decsf.o ../../SUBR/CONVERS/epic_dist.o ../../SUBR/1D_TRACING/prepare_ref.o ../../SUBR/1D_TRACING/ref_time.o ../../SUBR/CONVERS/sfdec.o
+OBJ+=../../SUBR/CONVERS/decsf.o ../../SUBR/CONVERS/epic_dist.o ../../SUBR/1D_TRACING/prepare_ref.o ../../SUBR/1D_TRACING/ref_time.o ../../SUBR/CONVERS/sfdec.o ../../SUBR/OTHERS/pause.o
 BIN=select.exe
 
 %.o:%.f90

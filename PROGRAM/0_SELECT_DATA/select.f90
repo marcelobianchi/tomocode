@@ -42,7 +42,7 @@ do i=1,10000
 end do
 501 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 502 read(1,*)fi0,tet0
 close(1)
 write(*,*)' fi0',fi0,' tet0',tet0
@@ -57,7 +57,7 @@ end do
 521 continue
 write(*,*)' cannot find RESIDUAL_CORRECTION in major_param.dat!!!'
 write(*,*)' .. or may be there is no file rays_tele_dir_initial.dat in the INIDATA folder .. '
-pause
+call pause()
 522 read(1,*)cor_y_n,max_val
 close(1)
 write(*,*)' cor_y_n',cor_y_n,' max_val',max_val
@@ -71,7 +71,7 @@ do i=1,10000
 end do
 511 continue
 write(*,*)' cannot find SELECT PARAMETERS in major_param.dat!!!'
-pause
+call pause()
 512 continue
 	! parameters for the local data selection
 	read(1,*)
@@ -126,9 +126,9 @@ if (kod_inv.eq.1) then
 	nstworld=wst-1
 	write(*,*)'nstworld=',nstworld
 end if
-!pause
+!call pause()
 
-open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p0.dat',form='binary')
+open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p0.dat',form='unformatted')
 	nray=0
 	nztl=0
 	nrlp=0
@@ -139,7 +139,7 @@ open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p0.dat',form='binary')
 	write(*,*)'select local data'
 	write(*,*)'******************************************************************************'
 
-	open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_loc0.dat',form='binary')
+	open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_loc0.dat',form='unformatted')
 	open(19,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_loctmp.dat')
 
 	30	read(1,end=31)xzt,yzt,zzt,nkrat
@@ -427,7 +427,7 @@ if (kod_dir.eq.0) goto 21
 		end do
 
 		!write(*,*)resav_p,resav_s
-		!pause
+		!call pause()
 
 	goto 20
 	close(1)
@@ -448,7 +448,7 @@ if (kod_inv.eq.0) goto 41
 	write(*,*)'select teleseismic data (INVERSE)'
 	write(*,*)'******************************************************************************'
 
-	open(1,file='../../DATA/ISC_DATA/rays_world.dat',form='binary')
+	open(1,file='../../DATA/ISC_DATA/rays_world.dat',form='unformatted')
 	40	read(1,end=41)fzt,tzt,zz,nkrat
 		!write(*,*)fzt,tzt,zz,nkrat
 
@@ -467,7 +467,7 @@ if (kod_inv.eq.0) goto 41
 			if (nkrat.lt.krat_min_inv) cycle			
 			if (epizt.gt.ar_rad) cycle
 			if (nkrat.gt.krat_max) cycle
-			!pause
+			!call pause()
 
 			nkr=nkr+1
 			fst=fstwor(wst)

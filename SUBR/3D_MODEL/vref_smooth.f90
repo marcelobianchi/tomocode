@@ -5,7 +5,7 @@ real fz3(3),zabc(3)
 
 if(nrefmod.eq.0) then
 	write(*,*)' the reference model is not defined!'
-	pause
+	call pause()
 end if
 
 do i=1,nrefmod

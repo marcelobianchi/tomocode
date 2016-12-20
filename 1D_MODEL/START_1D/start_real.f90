@@ -16,7 +16,7 @@ close(1)
 write(*,*)' number of iterations:',niter
 
 i=system('../../1D_MODEL/1_SELECT/select.exe')
-if (pausing.EQ.1) pause
+if (pausing.EQ.1) call pause()
 
 !******************************************************************
 	
@@ -33,22 +33,22 @@ do iter=1,niter
 	write(*,*)'	 ****************************************************'
 	write(*,*)'	 Reference table:'
 	i=system('../../1D_MODEL/2_REFTABLE/refrays.exe')
-        if (pausing.EQ.1) pause
+        if (pausing.EQ.1) call pause()
 
 	write(*,*)'	 ****************************************************'
 	write(*,*)'	 Source location:'
 	i=system('../../1D_MODEL/3_LOCATE/locate.exe')
-        if (pausing.EQ.1) pause
+        if (pausing.EQ.1) call pause()
 
 	write(*,*)'	 ****************************************************'
 	write(*,*)'	 Matrix calculation:'
 	i=system('../../1D_MODEL/4_MATR/matr.exe')
-        if (pausing.EQ.1) pause
+        if (pausing.EQ.1) call pause()
 
 	write(*,*)'	 ****************************************************'
 	write(*,*)'	 Inversion:'
 	i=system('../../1D_MODEL/5_INVERS/invers.exe')
-        if (pausing.EQ.1) pause
+        if (pausing.EQ.1) call pause()
 
 end do ! Different iterations
 write(it,'(i1)')niter

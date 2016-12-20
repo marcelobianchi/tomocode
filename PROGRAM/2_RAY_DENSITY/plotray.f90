@@ -32,7 +32,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 write(*,*)fi0,tet0
 close(1)
@@ -45,7 +45,7 @@ do i=1,10000
 end do
 573 continue
 write(*,*)' cannot find ORIENTATIONS in major_param.dat!!!'
-pause
+call pause()
 574 read(1,*)nornt
 read(1,*)(ornt(i),i=1,nornt)
 close(1)
@@ -59,7 +59,7 @@ do i=1,10000
 end do
 533 continue
 write(*,*)' cannot find GRID_PARAMETERS in major_param.dat!!!'
-pause
+call pause()
 534 continue
 read(1,*)xlim1,xlim2,dxpl
 read(1,*)ylim1,ylim2,dypl
@@ -88,8 +88,8 @@ plotray=0.
 dsy=0.
 nray=0
 
-open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat',form='binary')
-open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='binary')
+open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat',form='unformatted')
+open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='unformatted')
 
 nzt=0
 
@@ -195,7 +195,7 @@ close(15)
 do iiips=1,2
 	if(nray(iiips).eq.0) cycle
 	write(ppss,'(i1)')iiips
-	open(12,file='../../TMP/plotray'//ppss//gr//'.dat',form='binary')
+	open(12,file='../../TMP/plotray'//ppss//gr//'.dat',form='unformatted')
 	do iy=1,nypl
 		write(12)((plotray(iiips,ix,iy,iz),ix=1,nxpl),iz=1,nzpl)
 	end do

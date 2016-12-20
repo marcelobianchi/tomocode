@@ -71,7 +71,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 close(1)
 
@@ -83,7 +83,7 @@ do i=1,10000
 end do
 573 continue
 write(*,*)' cannot find ORIENTATIONS in major_param.dat!!!'
-pause
+call pause()
 574 read(1,*)nornt
 close(1)
 write(*,*)nornt
@@ -96,7 +96,7 @@ do i=1,10000
 end do
 558 continue
 write(*,*)' cannot find MOHO MODEL in major_param.dat!!!'
-pause
+call pause()
 559 read(1,*)model_crust
 close(1)
 
@@ -111,7 +111,7 @@ do i=1,10000
 end do
 583 continue
 write(*,*)' cannot find LOCATE _PARAMETERS in major_param.dat!!!'
-pause
+call pause()
 584 continue
 
 read(1,*)	! Parameters for bending:
@@ -209,11 +209,11 @@ if(iter.ne.1) then
 	end do
 end if
 
-open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it0//'.dat',form='binary')
+open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it0//'.dat',form='unformatted')
 
-open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//itt//'.dat',form='binary')
+open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//itt//'.dat',form='unformatted')
 open(14,file='../../DATA/'//re//'/'//ar//'/TIMES/srces'//itt//'.dat')
-open(12,file='../../TMP/ray_paths_p_'//itt//'.dat',form='binary')
+open(12,file='../../TMP/ray_paths_p_'//itt//'.dat',form='unformatted')
 
 allocate(rays_all(3,5000,2000),rays_best(3,5000,2000),nod_all(2000),nod_best(2000),stat=deal_stat)
 
@@ -360,10 +360,10 @@ ntot=0
                                     write(*,*)xst,yst,zst,xzt,yzt,zzt,ips,	tout
                                     write(*,*) 'nray=',nray
                                     write(*,*)xray(nodes-i+1),yray(nodes-i+1),zray(nodes-i+1)
-                                !pause
+                                !call pause()
                                end if
 			end do
-			!pause
+			!call pause()
 		else
 			call trace_bending(xzt,yzt,zzt,xst,yst,zst,ips,key_reloc,	tout)
                       nod_all(ikrat)=nodes
@@ -376,16 +376,16 @@ ntot=0
                                      write(*,*)xst,yst,zst,xzt,yzt,zzt,ips,	tout
                                      write(*,*) 'nray=',nray
                                     write(*,*)xray(nodes-i+1),yray(nodes-i+1),zray(nodes-i+1)
-                                    !pause
+                                    !call pause()
                                end if
 			end do
 		end if
 
-		!pause
+		!call pause()
 		ddd1=ddd1+abs(dtold(ikrat))
 		ddd2=ddd2+abs(tobs-tout)
 		!write(*,*)ikrat,' tobs=',tobs,' tout=',tout,' tref=',tref ,' nodes=',nodes
-		!pause
+		!call pause()
 	
 		!nod_all(ikrat)=nodes
 		!do i=1,nodes
@@ -434,7 +434,7 @@ ntot=0
 	end do
 	red=100*(ddd1-ddd2)/ddd1
 
-	!pause
+	!call pause()
 
 	if (d_ztr.gt.maxloc_dist.or.key_reloc.eq.0) then
 		x_best=xzt
@@ -469,11 +469,11 @@ ntot=0
 			exit
 		end do
 	end do
-	!pause
+	!call pause()
 
 	call dispers(dt3,	disp3,aver3,nkr3,ank)
 	!write(*,*)disp3,aver3,nkr3,ank
-	!pause
+	!call pause()
 	do i1=1,nkrat
 		tobkr(i1)=tobkr(i1) -aver3
 		dt3(i1)=tobkr(i1) - trfkr(i1)
@@ -698,7 +698,7 @@ ntot=0
 !
 !		end do
 !
-!		pause
+!		call pause()
 	end do
 	disp1=disp1/nkrat
 	disp2=disp2/nkrat
@@ -714,7 +714,7 @@ ntot=0
 	end if
 
 23 continue
-!	pause
+!	call pause()
 !    write(*,*)'adin'
 !    !deallocate(rays_all,STAT=deal_stat)
 !    if (deal_stat.ne.0) then
@@ -726,7 +726,7 @@ ntot=0
 !    deallocate(nod_all,nod_best)
 !    write(*,*)'chet'
 
-        !pause
+        !call pause()
 
 goto 21
 22 close(1)

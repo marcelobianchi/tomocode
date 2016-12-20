@@ -1,8 +1,8 @@
 include ../../Makerules
-OBJ=file.o  
+OBJ=file.o pause.o
 
 %.o:%.f90
-	$(FC) -c $(FFLAGS) $<
+	$(FC) -c -cpp $(FFLAGS) $<
 
 all: compile
 

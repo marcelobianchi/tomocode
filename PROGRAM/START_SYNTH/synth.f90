@@ -24,7 +24,7 @@ do imodel=1,num_models
 	call createdir('..\..\DATA\'//re_syn//'\'//ar_syn//'\GRIDS')
 	call createdir('..\..\DATA\'//re_syn//'\'//ar_syn//'\RESULT')
 	call createdir('..\..\DATA\'//re_syn//'\'//ar_syn//'\TIMES')
-	if (pausing.eq.1) pause
+	if (pausing.eq.1) call pause()
 
 	write(*,*)' input:',ar_real
 	write(*,*)' output:',ar_syn
@@ -40,7 +40,7 @@ do imodel=1,num_models
 	re=re_syn
 
 	call copyfile('..\..\DATA\'//re//'\'//ar//'\INI_PARAM\ref_syn.dat','..\..\DATA\'//re//'\'//ar//'\INI_PARAM\refmod.dat')
-	if (pausing.eq.1) pause
+	if (pausing.eq.1) call pause()
 
 
 	open(11,file='../../model.dat')
@@ -54,17 +54,17 @@ do imodel=1,num_models
 	write(*,*) '*************************************'
 
 	i=runcommand('..\..\LIN_PROG\0_REF_RAYS\refrays.exe')
-	if (pausing.eq.1) pause
+	if (pausing.eq.1) call pause()
 
 	write(*,*)'	 ****************************************************'
 	write(*,*)'	 Compute the synthetic times: '
 	i=runcommand('..\B_SYNTH_TIMES\rays.exe')
-	if (pausing.eq.1) pause
+	if (pausing.eq.1) call pause()
 
 
 	
 	call copyfile('..\..\DATA\'//re//'\'//ar//'\INI_PARAM\ref_start.dat', '..\..\DATA\'//re//'\'//ar//'\INI_PARAM\refmod.dat')
-	if (pausing.eq.1) pause
+	if (pausing.eq.1) call pause()
 
 	open(1,file='../../DATA/'//re//'/'//ar//'/INI_PARAM/major_param.dat')
 		do i=1,10000
@@ -73,7 +73,7 @@ do imodel=1,num_models
 		end do
 		511 continue
 		write(*,*)' cannot find SELECT PARAMETERS in major_param.dat!!!'
-		if (pausing.eq.1) pause
+		if (pausing.eq.1) call pause()
 		512 continue
 			read(1,*)
 			read(1,*) kod_local
@@ -146,7 +146,7 @@ do imodel=1,num_models
 		write(11,'(a8)')ar		
 		close(11)
 		i=runcommand('..\..\1D_MODEL\START_1D\start_real.exe')
-		if (pausing.eq.1) pause
+		if (pausing.eq.1) call pause()
 
 	end if
 
@@ -163,7 +163,7 @@ do imodel=1,num_models
 	write(*,*) '*************************************'
 
 	i=runcommand('..\..\LIN_PROG\0_REF_RAYS\refrays.exe')
-	if (pausing.eq.1) pause
+	if (pausing.eq.1) call pause()
 
 	if (kod_local.eq.1) then
 		write(*,*) '*************************************'
@@ -171,7 +171,7 @@ do imodel=1,num_models
 		write(*,*) '*************************************'
 
 		i=runcommand('..\..\LIN_PROG\1_LOC_EVENT\locate.exe')
-		if (pausing.eq.1) pause
+		if (pausing.eq.1) call pause()
 	end if
 
 
@@ -183,7 +183,7 @@ do imodel=1,num_models
 	end do
 	573 continue
 	write(*,*)' cannot find ORIENTATIONS in major_param.dat!!!'
-	if (pausing.eq.1) pause
+	if (pausing.eq.1) call pause()
 	574 read(1,*)nornt
 	close(1)
 	!******************************************************************
@@ -195,7 +195,7 @@ do imodel=1,num_models
 	end do
 	513 continue
 	write(*,*)' cannot find GRID PARAMETERS in major_param.dat!!!'
-	if (pausing.eq.1) pause
+	if (pausing.eq.1) call pause()
 	514 continue
 	read(1,*)
 	read(1,*)
@@ -226,7 +226,7 @@ do imodel=1,num_models
 		write(*,*)'	 Source location'
 		!if (iter.ne.1)	i=runcommand('..\1_3D_LOCATE\3d_locate.exe')
 		i=runcommand('..\1_3D_LOCATE\3d_locate.exe')
-		if (pausing.eq.1) pause
+		if (pausing.eq.1) call pause()
 
 		if(kod_param.eq.1) then
 
@@ -243,23 +243,23 @@ do imodel=1,num_models
 					write(*,*)'	 ****************************************************'
 					write(*,*)'	 Compute the ray density'
 					i=runcommand('..\2_RAY_DENSITY\plotray.exe')
-					if (pausing.eq.1) pause
+					if (pausing.eq.1) call pause()
 					write(*,*)'	 ****************************************************'
 					write(*,*)'	 Compute the parameterization grid:'
 					i=runcommand('..\3_GRID\grid.exe')
-					if (pausing.eq.1) pause
+					if (pausing.eq.1) call pause()
 					i=runcommand('..\4_TETRAD\tetrad.exe')
-					if (pausing.eq.1) pause
+					if (pausing.eq.1) call pause()
 					i=runcommand('..\5_SOSEDI\add_matr.exe')
-					if (pausing.eq.1) pause
+					if (pausing.eq.1) call pause()
 				end if
 				i=runcommand('..\6_MATR\matr.exe')
-				if (pausing.eq.1) pause
+				if (pausing.eq.1) call pause()
 				i=runcommand('..\7_INVERS\invbig.exe')
-				if (pausing.eq.1) pause
+				if (pausing.eq.1) call pause()
 			end do
 			i=runcommand('..\8_3D_MODEL\mod_3d.exe')
-			if (pausing.eq.1) pause
+			if (pausing.eq.1) call pause()
 
 		else if(kod_param.eq.2) then
 
@@ -275,19 +275,19 @@ do imodel=1,num_models
 					write(*,*)'	 ****************************************************'
 					write(*,*)'	 Compute the ray density'
 					i=runcommand('..\2a_RAY_DENSITY\plotray.exe')
-					if (pausing.eq.1) pause
+					if (pausing.eq.1) call pause()
 					write(*,*)'	 ****************************************************'
 					write(*,*)'	 Compute the parameterization grid:'
 					i=runcommand('..\3a_GRID\block.exe')
-					if (pausing.eq.1) pause
+					if (pausing.eq.1) call pause()
 				end if
 				i=runcommand('..\6a_MATR\matr_hor.exe')
-				if (pausing.eq.1) pause
+				if (pausing.eq.1) call pause()
 				i=runcommand('..\7a_INVERS\invers_hor.exe')
-				if (pausing.eq.1) pause
+				if (pausing.eq.1) call pause()
 			end do
 			i=runcommand('..\8a_3D_MODEL\3d_model_block.exe')
-			if (pausing.eq.1) pause
+			if (pausing.eq.1) call pause()
 		end if
 	end do ! Different iterations
 end do

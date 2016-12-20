@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=paths.o 
-OBJ+=../../SUBR/CONVERS/decsf.o ../../SUBR/CONVERS/sfdec.o
+OBJ+=../../SUBR/CONVERS/decsf.o ../../SUBR/CONVERS/sfdec.o ../../SUBR/OTHERS/pause.o
 BIN=path.exe
 
 %.o:%.f90

@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=raydens_hor.o 
-OBJ+=../../SUBR/RAZNOE/int_best.o ../../SUBR/CONVERS/decsf.o ../../SUBR/CONVERS/sfdec.o
+OBJ+=../../SUBR/RAZNOE/int_best.o ../../SUBR/CONVERS/decsf.o ../../SUBR/CONVERS/sfdec.o ../../SUBR/OTHERS/pause.o
 BIN=raydens_hor.exe
 
 %.o:%.f90

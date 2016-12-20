@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=plotray.o 
-OBJ+=../../SUBR/RAZNOE/int_best.o
+OBJ+=../../SUBR/RAZNOE/int_best.o ../../SUBR/OTHERS/pause.o
 BIN=plotray.exe
 
 %.o:%.f90

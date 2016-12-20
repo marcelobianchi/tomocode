@@ -55,7 +55,7 @@ do inode=1,nodes-1
 	!write(*,*)' t=',ttt,' s=',sss,' vvv=',vvv
 end do
 write(*,*)' ttt=',ttt,' sss=',sss
-pause
+call pause()
 
 tout=ttt
 

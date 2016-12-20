@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=synth.o 
-OBJ+=../../SUBR/OTHERS/file.o
+OBJ+=../../SUBR/OTHERS/file.o ../../SUBR/OTHERS/pause.o
 BIN=synth.exe
 
 %.o:%.f90

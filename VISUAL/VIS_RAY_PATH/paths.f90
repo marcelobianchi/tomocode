@@ -61,7 +61,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 write(*,*)fi0,tet0
 close(1)
@@ -115,8 +115,8 @@ nst=i-1
 write(*,*)' nst=',nst
 close(12)
 
-open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat',form='binary')
-open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='binary')
+open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat',form='unformatted')
+open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='unformatted')
 
 open(11,file='../../FIG_FILES/RAYS/rays_ver.dat')
 open(12,file='../../FIG_FILES/RAYS/ztr_ver.dat')

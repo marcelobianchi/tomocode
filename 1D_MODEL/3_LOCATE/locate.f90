@@ -51,7 +51,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 
 554 read(1,*)fi0,tet0
 close(1)
@@ -64,7 +64,7 @@ do i=1,10000
 end do
 543 continue
 write(*,*)' cannot find LIN_LOC_PARAM in major_param.dat!!!'
-pause
+call pause()
 
 544 continue
 read(1,*)krat_min
@@ -134,9 +134,9 @@ close(1)
 write(*,*)' nst=',nst
 
 
-open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays'//it0//'.dat',form='binary')
+open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays'//it0//'.dat',form='unformatted')
 
-open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/rays'//it1//'.dat',form='binary')
+open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/rays'//it1//'.dat',form='unformatted')
 
 izt=0
 nray=0
@@ -204,7 +204,7 @@ dispnew=0
 
 		!write(*,*)xmin,ymin,zmin,nk
 		call goal_new(xmin,ymin,zmin, disp,aver,nk,amax)
-		!pause
+		!call pause()
 
 		!write(*,*)' amax=',amax
 		!write(*,*)res_loc1,res_loc2,w_P_S_diff
@@ -298,7 +298,7 @@ dispnew=0
 		if(hordist.lt.dismin) dismin=hordist
 	end do
 	!write(*,*)' dismin 2222=',dismin
-	!pause
+	!call pause()
 	if(dismin.gt.dist_max) goto 992
 
 
@@ -384,7 +384,7 @@ dispnew=0
 		end if
 	end do
 !close(31)
-	if(nk.ne.nk1) pause
+	if(nk.ne.nk1) call pause()
 
 
 
@@ -413,9 +413,9 @@ dispnew=0
 			write(*,*)' reduction=',perc
 		end if
 		write(*,*)
-		!if(ank.lt.0.6)pause
+		!if(ank.lt.0.6)call pause()
 		!stop
-		!pause
+		!call pause()
 	end if
 	!if(ntot.gt.nraymax)goto 991
 

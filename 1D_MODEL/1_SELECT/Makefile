@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=select.o 
-OBJ+=../../SUBR/CONVERS/decsf.o
+OBJ+=../../SUBR/CONVERS/decsf.o ../../SUBR/OTHERS/pause.o
 BIN=select.exe
 
 %.o:%.f90

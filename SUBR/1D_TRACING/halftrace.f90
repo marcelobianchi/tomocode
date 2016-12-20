@@ -20,7 +20,7 @@ nrefmod=nrefmod0
 if(nrefmod*(nrefmod-601).ge.0.) then
 	write(*,*)' nrefmod=',nrefmod
 	write(*,*)' velocity model is not ready'
-	pause
+	call pause()
 end if
 
 do i=1,nrefmod
@@ -71,7 +71,7 @@ nrefmod=il
 !do i=1,nrefmod
 	!write(*,*)hhmod(i),vmod(i)
 !end do
-!pause
+!call pause()
 zend=hhmod(nrefmod)
 
 !write(*,*)' z_up=',z_up
@@ -87,7 +87,7 @@ end do
 !do i=1,nref
 !	write(*,*)rrr(i),vvv(i)
 !end do
-!pause
+!call pause()
 !write(*,*)' ep1=',ep1,' time1=',time1
 
 883 continue
@@ -117,7 +117,7 @@ do ilay=1,nref-1
 
 	p2=r2/v2
 	!write(*,*)' p=',p,' p2=',p2
-!	pause
+!	call pause()
 	if(p2.gt.p) cycle
 	if(r2.eq.r1.and.p2.lt.p) exit
 	aaa=(v1-v2)/(r1-r2)

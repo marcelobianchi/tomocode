@@ -82,7 +82,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 close(1)
 
@@ -159,7 +159,7 @@ do ips=1,2
 				v_ini(ifi,itet)=dv
 				write(*,*)' fi=',fff,' tet=',ttt,' dv=',dv
 				write(*,*)' x=',xxx,' y=',yyy,' z=',zzz,' dv=',dv
-				!pause
+				!call pause()
 			end do
 		end do
 

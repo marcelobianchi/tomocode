@@ -45,7 +45,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 write(*,*)fi0,tet0
 close(1)
@@ -60,7 +60,7 @@ do i=1,10000
 end do
 563 continue
 write(*,*)' cannot find 3D_MODEL in major_param.dat!!!'
-pause
+call pause()
 564 continue
 read(1,*) xx1,xx2,dxx 
 read(1,*) yy1,yy2,dyy 
@@ -76,7 +76,7 @@ do i=1,10000
 end do
 573 continue
 write(*,*)' cannot find ORIENTATIONS in major_param.dat!!!'
-pause
+call pause()
 574 read(1,*)nornt
 close(1)
 !******************************************************************
@@ -130,7 +130,7 @@ close(1)
 do ips=1,2
 	write(ps,'(i1)')ips
 	if(nrps(ips).eq.0) then
-		open(11,file='../../DATA/'//re//'/'//ar//'/3D_MODEL/dv_v'//ps//it//'.dat',form='binary')
+		open(11,file='../../DATA/'//re//'/'//ar//'/3D_MODEL/dv_v'//ps//it//'.dat',form='unformatted')
 		write(11)0,0,0
 		write(11)0,0,0
 		write(11)0,0,0
@@ -246,7 +246,7 @@ do ips=1,2
 
 
 !       call WRITEOD(dv_3D_abs,'../../FIG_FILES/3D_MODEL/dv3d_abs_'//ps//it//'OD.dat', nxx, nyy, nzz)
-	open(11,file='../../FIG_FILES/3D_MODEL/dv3d_abs_'//ps//it//'.dat',form='binary')
+	open(11,file='../../FIG_FILES/3D_MODEL/dv3d_abs_'//ps//it//'.dat',form='unformatted')
 	write(11)xx1,nxx,dxx
 	write(11)yy1,nyy,dyy
 	write(11)zz1,nzz,dzz
@@ -257,7 +257,7 @@ do ips=1,2
 	close(11)
 
 !        call WRITEOD(dv_3D_perc,'../../FIG_FILES/3D_MODEL/dv3d_perc_'//ps//it//'OD.dat', nxx, nyy, nzz)
-	open(11,file='../../FIG_FILES/3D_MODEL/dv3d_perc_'//ps//it//'.dat',form='binary')
+	open(11,file='../../FIG_FILES/3D_MODEL/dv3d_perc_'//ps//it//'.dat',form='unformatted')
 	write(11)xx1,nxx,dxx
 	write(11)yy1,nyy,dyy
 	write(11)zz1,nzz,dzz
@@ -268,7 +268,7 @@ do ips=1,2
 	close(11)
 	
 !        call WRITEOD(vref_3D,'../../FIG_FILES/3D_MODEL/vref3d_'//ps//it//'OD.dat', nxx, nyy, nzz)
-	open(11,file='../../FIG_FILES/3D_MODEL/vref3d_'//ps//it//'.dat',form='binary')
+	open(11,file='../../FIG_FILES/3D_MODEL/vref3d_'//ps//it//'.dat',form='unformatted')
 	write(11)xx1,nxx,dxx
 	write(11)yy1,nyy,dyy
 	write(11)zz1,nzz,dzz
@@ -279,7 +279,7 @@ do ips=1,2
 	close(11)
 	
 !       call WRITEOD(mask_3d, '../../FIG_FILES/3D_MODEL/mask3d_'//ps//it//'OD.dat', nxx, nyy, nzz)
-	open(11,file='../../FIG_FILES/3D_MODEL/mask3d_'//ps//it//'.dat',form='binary')
+	open(11,file='../../FIG_FILES/3D_MODEL/mask3d_'//ps//it//'.dat',form='unformatted')
 	write(11)xx1,nxx,dxx
 	write(11)yy1,nyy,dyy
 	write(11)zz1,nzz,dzz
@@ -302,7 +302,7 @@ SUBROUTINE WRITEOD(matrix, name, nxx, nyy, nzz)
   CHARACTER(*) name
   real matrix(nxx,nyy,nzz)
         
-  open(123,file=name,form='binary')
+  open(123,file=name,form='unformatted')
   do iyy=1,nyy
     do ixx=1,nxx
       do izz=1,nzz

@@ -61,7 +61,7 @@ do i=1,10000
 end do
 573 continue
 write(*,*)' cannot find ORIENTATIONS in major_param.dat!!!'
-pause
+call pause()
 574 read(1,*)nornt
 read(1,*)(ornt(i),i=1,nornt)
 close(1)
@@ -71,7 +71,7 @@ write(*,*)' orient=',orient
 sinbase=sin(orient*per)
 cosbase=cos(orient*per)
 
-!pause
+!call pause()
 !******************************************************************
 open(1,file='../../DATA/'//re//'/'//ar//'/INI_PARAM/major_param.dat')
 do i=1,10000
@@ -80,7 +80,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 write(*,*)fi0,tet0
 close(1)
@@ -93,7 +93,7 @@ do i=1,10000
 end do
 533 continue
 write(*,*)' cannot find GRID_PARAMETERS in major_param.dat!!!'
-pause
+call pause()
 534 continue
 read(1,*)xlim1,xlim2,dxpl
 read(1,*)ylim1,ylim2,dypl
@@ -221,7 +221,7 @@ do iiips=1,2
 
 			!if(zz.gt.130.and.popor(iiips,i,n).ne.0) then
 				!write(*,*)popor(iiips,i,n),xx,yy,zz
-				!pause
+				!call pause()
 			!end if
 			vtop(iiips,i,n)=velocity(xx,yy,zz,iiips)
 		end do
@@ -259,8 +259,8 @@ nonz_s=0
 
 
 nr=0
-open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat',form='binary')
-open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='binary')
+open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat',form='UNFORMATTED')
+open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='UNFORMATTED')
 
 728 continue
 
@@ -315,7 +315,7 @@ open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='binary')
 		dtdz=cosal*s0
 		
 		!write(*,*)'hor=',hor,'tot=',tot
-		!pause
+		!call pause()
 
 		!if(nr.lt.7) cycle
 
@@ -412,7 +412,7 @@ open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='binary')
 								write(*,*)' xxx=',xxx,' yyy=',yyy,' zzz=',zzz
 								write(*,*)' zlim1=',zlim1,' zlim2=',zlim2
 								write(*,*)' out of the study volume'
-								pause
+								call pause()
 
 
 710			continue
@@ -454,7 +454,7 @@ open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='binary')
 
 											write(*,*)' xxx=',xxx,' yyy=',yyy,' zzz=',zzz
 											write(*,*)' out of the study volume'
-											pause
+											call pause()
 711			continue
 			iotr4(3)=iotper(ip-1)
 			iotr4(4)=iotper(ip)
@@ -520,17 +520,17 @@ open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='binary')
 
 			do itop=1,iinf
 				!write(*,*)' iuz=',iuz(itop),' nurr=',nurr(itop)
-				!pause
+				!call pause()
 				iuz0=iuz(itop)
 				nur0=nurr(itop)
 				imatr=popor(ips,iuz0,nur0)
-				if(imatr.eq.0) pause
+				if(imatr.eq.0) call pause()
 
 				do iotr=1,4
 					nnn=nur1
 					if(iotr.gt.2) nnn=nur2
 					!write(*,*)' iotr4(iotr)=',iotr4(iotr)
-					!pause
+					!call pause()
 					ii1=kod_otr(ips,1,iotr4(iotr),nnn)
 					!write(*,*)' ii1=',ii1
 					x1=xtop(ips,ii1,nnn)
@@ -552,7 +552,7 @@ open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='binary')
 					votr(iotr)=v1+((v2-v1)/(x2-x1))*(xxx-x1)
 					zotr(iotr)=z1+((z2-z1)/(x2-x1))*(xxx-x1)
 				end do
-				!pause
+				!call pause()
 				z11=zotr(1)
 				z21=zotr(2)
 				z12=zotr(3)
@@ -600,9 +600,9 @@ open(2,file='../../TMP/ray_paths_p_'//it//'.dat',form='binary')
 		if(mod(nray,1000).eq.0)write(*,'(4i6,f8.3)')nray,nzt,ips,nuz,res
 		!if (nuz.eq.0) then
 			!write(*,*) nuz,res,ist,ips,nzt
-			!pause
+			!call pause()
 		!end if
-		!pause
+		!call pause()
 		write(11) nuz,res,ist,ips,nzt
 		write(11)dtdx,dtdy,dtdz
 		!write(*,*)dtdx,dtdy,dtdz

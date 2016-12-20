@@ -34,7 +34,7 @@ do i=1,10000
 end do
 573 continue
 write(*,*)' cannot find ORIENTATIONS in major_param.dat!!!'
-pause
+call pause()
 574 read(1,*)nornt
 read(1,*)(ornt(i),i=1,nornt)
 close(1)
@@ -63,7 +63,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 write(*,*)fi0,tet0
 close(1)
@@ -75,7 +75,7 @@ do i=1,10000
 end do
 533 continue
 write(*,*)' cannot find GRID_PARAMETERS in major_param.dat!!!'
-pause
+call pause()
 534 continue
 read(1,*)xlim1,xlim2,dxpl
 read(1,*)ylim1,ylim2,dypl
@@ -135,7 +135,7 @@ do iiips=1,2
 
 
 	write (*,*) 'Reading file: plotray'//ps//gr//'.dat'
-	open(1,file='../../TMP/plotray'//ps//gr//'.dat',form='binary', status="OLD", ERR=22)
+	open(1,file='../../TMP/plotray'//ps//gr//'.dat',form='unformatted', status="OLD", ERR=22)
 
 	nonzer=0
 	sumtotal=0

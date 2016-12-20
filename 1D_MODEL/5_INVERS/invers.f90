@@ -102,7 +102,7 @@ allocate(xmod(ncols),x(ncols),x0(ncols),v(ncols),w(ncols))
 allocate(ncol(nrows),dt(nrows),u(nrows))
 allocate(aaa(nonzer),ncolrow(nonzer))
 
-open(1,file='../../TMP/matr_1d.dat',form='binary')
+open(1,file='../../TMP/matr_1d.dat',form='unformatted')
 ir=0
 nonz=0
 
@@ -260,17 +260,17 @@ do irw=1,nr
 		if(abs(u(irw)).gt.1.e10) then
 			write(*,*)' Warning!!!'
 			write(*,*)' dt=',u(irw)
-			pause
+			call pause()
 		end if
 		if(abs(aaa(kount)).gt.1.e10) then
 			write(*,*)' Warning!!!'
 			write(*,*)' aaa=',aaa(kount)
-			pause
+			call pause()
 		end if
 		if(nn.le.0.or.nn.gt.ncols) then
 			write(*,*)' Warning!!!'
 			write(*,*)' irw=',irw,' nn=',nn
-			pause
+			call pause()
 		end if
 	end do
 end do

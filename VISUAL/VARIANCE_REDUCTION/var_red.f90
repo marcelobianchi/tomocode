@@ -50,7 +50,7 @@ do iter=0,niter
 	ntot_p=0
 	ntot_s=0
 
-	open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat',form='binary')
+	open(1,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat',form='unformatted')
 !	open(11,file='../../FIG_FILES/STAT/resid_'//re//'_'//ar//'.dat')
 	open(11,file='../../FIG_FILES/STAT/resid_'//re//'_'//ar//'_'//it//'.dat')
 	write(*,*)' file=', '../../DATA/'//re//'/'//ar//'/TIMES/rays_p'//it//'.dat'

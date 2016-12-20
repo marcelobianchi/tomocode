@@ -61,14 +61,14 @@ end do
 !	write(21,*)fi,tet
 !end do
 !close(21)
-!pause
+!call pause()
 
 open(1,file='../../DATA/'//re//'/'//ar//'/GRIDS/obr'//ps//gr//'.dat')
 read(1,*) nobr
 if(nobr.gt.10000) then
 	write(*,*)' nobr=',nobr
 	write(*,*)' One should increase size of dv_mod'
-	pause
+	call pause()
 end if
 close(1)
 

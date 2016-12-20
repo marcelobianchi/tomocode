@@ -26,7 +26,7 @@ do ix=1,nxx-1
 end do
 write(*,*)' problem in anom_3D_xyz:'
 write(*,*)' xx1=',xx1,' xx2=',xx2,' xxx=',xxx
-pause
+call pause()
 11 continue
 
 do iy=1,nyy-1
@@ -36,7 +36,7 @@ do iy=1,nyy-1
 end do
 write(*,*)' problem in anom_3D_xyz:'
 write(*,*)' yyy=',yyy
-pause
+call pause()
 12 continue
 
 do iz=1,nzz+1
@@ -54,7 +54,7 @@ do iz=1,nzz+1
 end do
 write(*,*)' problem in anom_3D_xyz:'
 write(*,*)' zzz=',zzz
-pause
+call pause()
 13 continue
 
 

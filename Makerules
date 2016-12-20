@@ -1,4 +1,5 @@
-FC=ifort
+FC=gfortran
 CC=gcc
-FFLAGS=-I./ -DLINUX -fpp
+
+FFLAGS=-I./ -DLINUX
 CFLAGS=-I./ -O2 -DLINUX

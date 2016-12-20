@@ -7,7 +7,7 @@ nref=nrefmod
 
 if(nref.eq.0) then
 	write(*,*)' the reference model is not defined!'
-	pause
+	call pause()
 end if
 !write(*,*)' z=',z,hhmod(1),hhmod(nref)
 if(z.le.hhmod(1))then

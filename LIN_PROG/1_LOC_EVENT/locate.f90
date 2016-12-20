@@ -62,7 +62,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 
 554 read(1,*)fi0,tet0
 close(1)
@@ -75,7 +75,7 @@ do i=1,10000
 end do
 543 continue
 write(*,*)' cannot find LIN_LOC_PARAM in major_param.dat!!!'
-pause
+call pause()
 
 544 continue
 read(1,*)krat_min
@@ -125,7 +125,7 @@ nst=0
 44	close(1)
 close(12)
 write(*,*)' nst=',nst
-!pause
+!call pause()
 
 !open(1,file='../../data/'//re//'/inidata/rays.dat')
 open(1,file='../../DATA/'//re//'/INIDATA/rays_local.dat')
@@ -139,7 +139,7 @@ open(15,file='../../DATA/'//re//'/'//ar//'/TIMES/srces_true.dat')
 open(16,file='../../FIG_FILES/RAYS/hor_shift0.bln')
 
 
-open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_loc0.dat',form='binary')
+open(11,file='../../DATA/'//re//'/'//ar//'/TIMES/rays_loc0.dat',form='unformatted')
 open(12,file='../../DATA/'//re//'/'//ar//'/TIMES/ztr0.dat')
 
 izt=0
@@ -228,7 +228,7 @@ ntot=0
 	!do i=1,nkrat
 		!write(*,*)istkr(i),ipskr(i),tobkr(i)
 	!end do
-	!pause
+	!call pause()
 
 	if(nkrat.lt.krat_min) then
 	  write(*,*) ' Abort nev nkrat=',nkrat,' too low nkratmin=',krat_min
@@ -273,7 +273,7 @@ ntot=0
 		!write(*,*)res_loc1,res_loc2,w_P_S_diff
 
 		!write(*,*)xmin,ymin,zmin,amax
-		!pause
+		!call pause()
 
 		nkode=1
 		kodes(1,nkode)=0
@@ -365,7 +365,7 @@ ntot=0
 		if(hordist.lt.dismin) dismin=hordist
 	end do
 	!write(*,*)' dismin 2222=',dismin
-	!pause
+	!call pause()
 	if(dismin.gt.dist_max) goto 992
 
 
@@ -396,7 +396,7 @@ ntot=0
 		ngood(i)=0
 		nbad=nbad+1
 	end do
-	!pause
+	!call pause()
 	nk=nkrat-nbad
 	abad=nbad
 	akrat=nkrat
@@ -407,7 +407,7 @@ ntot=0
 		!write(*,*)' BAD event!!!'
 		!write(*,488)izt,xmin,ymin,zmin,ank
 		!write(*,488)izt,xold0,yold0,zold0
-		!pause
+		!call pause()
 		goto 992
 	end if
 	if(nk.lt.krat_min) goto 992
@@ -455,7 +455,7 @@ ntot=0
 		end if
 	end do
 !close(31)
-	if(nk.ne.nk1) pause
+	if(nk.ne.nk1) call pause()
 
 
 
@@ -478,9 +478,9 @@ ntot=0
 		write(*,*)' nkrat=',nkrat,' nk=',nk,' ntot=',ntot
 		!write(*,*)' ntot=',ntot,' dcur=',dcur
 		write(*,*)
-		!if(ank.lt.0.6)pause
+		!if(ank.lt.0.6)call pause()
 		!stop
-		!pause
+		!call pause()
 	end if
 	!if(ntot.gt.nraymax)goto 991
 

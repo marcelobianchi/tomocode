@@ -55,7 +55,7 @@ do i=1,10000
 end do
 573 continue
 write(*,*)' cannot find INVERSION PARAMETERS in major_param.dat!!!'
-pause
+call pause()
 574 continue
 read(1,*)iter_lsqr
 read(1,*)wg_vel_p,wg_vel_s
@@ -385,7 +385,7 @@ end if
 
 write(*,*)' Preliminary values: N rows=',nrows,' N nonzer=',nonzer
 write(*,*)
-!pause
+!call pause()
 
 if(it_curr.eq.1) then
 	allocate(xmod(nc),x(nc),x0(nc),v(nc),w(nc))
@@ -428,13 +428,13 @@ open(3,file='../../TMP/matr'//it//gr//'.dat',form='unformatted')
 
 	ncol(ir) = ncol(ir) + 4 + 1 
 
-	!pause
+	!call pause()
 	!if(mod(ir,100).eq.0)write(*,*)' ir=',ir,' nonz=',nonz
 	if(ips.eq.1) then
 		do i=1,nst_p
 			if(ist_p(i).ne.ist) cycle
 			nonz=nonz+1
-			if(nonz.ge.nonzer) pause'7' 
+			if(nonz.ge.nonzer) call pause()
 			aaa(nonz)=wg_st_p
 			ncolrow(nonz)=np2+i
 			exit
@@ -443,7 +443,7 @@ open(3,file='../../TMP/matr'//it//gr//'.dat',form='unformatted')
 		do i=1,nst_s
 			if(ist_s(i).ne.ist) cycle
 			nonz=nonz+1
-			if(nonz.ge.nonzer) pause'7' 
+			if(nonz.ge.nonzer) call pause()
 			aaa(nonz)=wg_st_s
 			ncolrow(nonz)=np3+i
 			exit
@@ -564,17 +564,17 @@ do irw=1,nr
 		if(abs(u(irw)).gt.1.e10) then
 			write(*,*)' Warning!!!'
 			write(*,*)' dt=',u(irw)
-			pause
+			call pause()
 		end if
 		if(abs(aaa(kount)).gt.1.e10) then
 			write(*,*)' Warning!!!'
 			write(*,*)' aaa=',aaa(kount)
-			pause
+			call pause()
 		end if
 		if(nn.le.0.or.nn.gt.nc) then
 			write(*,*)' Warning!!!'
 			write(*,*)' irw=',irw,' nn=',nn
-			pause
+			call pause()
 		end if
 	end do
 end do

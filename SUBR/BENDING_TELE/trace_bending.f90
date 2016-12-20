@@ -44,7 +44,7 @@ if (isnan(tout)) then
 		!write(*,*)x1,y1,z1
 	end do
 	close(21)
-	!pause
+	!call pause()
 end if
 
 
@@ -108,7 +108,7 @@ do nparts=1,npart_max
 		!do i=1,nodes
 		!	write(*,*)xray(i),yray(i),zray(i)
 		!end do
-		!pause
+		!call pause()
 
 
 !write(*,*)' nodes=',nodes,' nrpart=',nrpart
@@ -219,7 +219,7 @@ do nparts=1,npart_max
 			write(21,*)dd,-z1
 		end do
 		close(21)
-		!pause
+		!call pause()
 	end if
 
 
@@ -240,7 +240,7 @@ if (aaa.eq.1) then
 		write(*,*)x1,y1,z1
 	end do
 	close(21)
-	pause
+	call pause()
 end if
 
 
@@ -378,7 +378,7 @@ if (aaa.eq.1) then
 		write(*,*)x1,y1,z1
 	end do
 	close(21)
-	pause
+	call pause()
 end if
 
 ! time along the ray
@@ -482,8 +482,8 @@ end if
 
 tout=ttt + dtcr_st + dtcr_zt
 !write(*,*)' tout=',tout
-!if ((tout-100.)*(tout-2000.).gt.0) pause
-!pause
+!if ((tout-100.)*(tout-2000.).gt.0) call pause()
+!call pause()
 
 return
 

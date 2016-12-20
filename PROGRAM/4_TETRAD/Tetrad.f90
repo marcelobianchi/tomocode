@@ -46,7 +46,7 @@ do i=1,10000
 end do
 553 continue
 write(*,*)' cannot find AREA CENTER in major_param.dat!!!'
-pause
+call pause()
 554 read(1,*)fi0,tet0
 write(*,*)fi0,tet0
 close(1)
@@ -61,7 +61,7 @@ do i=1,10000
 end do
 533 continue
 write(*,*)' cannot find GRID_PARAMETERS in major_param.dat!!!'
-pause
+call pause()
 534 continue
 read(1,*)xlim1,xlim2,dxpl
 read(1,*)ylim1,ylim2,dypl
@@ -175,7 +175,7 @@ do iiips=1,2
 	!		write(*,'(10f7.1)')(zver1(i,iver+1),i=1,nn1(iver+1))
 	1		continue
 	!		write(*,*)' i1=',i1,' i2=',i2
-	!		pause
+	!		call pause()
 			if(i1.ge.nn1(iver).and.i2.ge.nn1(iver+1))cycle
 			if(i1.ge.nn1(iver))goto 332
 			if(i2.ge.nn1(iver+1))goto 333
@@ -228,7 +228,7 @@ do iiips=1,2
 	!!		write(*,*)' dz1=',dz1,' dz2=',dz2
 	!		write(*,*)' i1=',i1,' id01=',id01,' id1=',id1,' id11=',id11
 	!		write(*,*)' i2=',i2,' id02=',id02,' id2=',id2,' id22=',id22
-	!		pause
+	!		call pause()
 
 
 			if (dz1.lt.dz2) goto 332
@@ -296,7 +296,7 @@ do iiips=1,2
 	close(11)
 	close(2)
 	close(3)
-	!pause
+	!call pause()
 
 	open(3,file='../../TMP/verline'//ppss//'.dat')
 	open(4,file='../../TMP/otr'//ppss//gr//'.dat')
@@ -344,7 +344,7 @@ do iiips=1,2
 		nver1=nver(nur1) 
 		nver2=nver(nur2) 
 	!	write(*,*)' nver1=',nver1,' nver2=',nver2
-	!	pause
+	!	call pause()
 	! compute SOSEDI at first level
 
 
@@ -473,9 +473,9 @@ do iiips=1,2
 	!	 write(*,'(10f7.1)')(verlin1(i),i=1,nver1)
 	!	write(*,*)' nver2=',nver2
 	!	 write(*,'(10f7.1)')(verlin2(i),i=1,nver2)
-	!	 pause
+	!	 call pause()
 
-	!	 pause
+	!	 call pause()
 
 
 		ivert1=1
@@ -505,7 +505,7 @@ do iiips=1,2
 	!	write(*,*)' x11=',x11,' x22=',x22
 	!	write(*,*)
 
-	!	pause
+	!	call pause()
 
 		if(ivert1.eq.nver1.and.ivert2.eq.nver2) goto 15
 
@@ -547,7 +547,7 @@ do iiips=1,2
 	!	write(31,*)2
 	!	write(31,*)ztop1(i1),yris1
 	!	write(31,*)ztop2(i2-ntop1),yris2
-	!	pause
+	!	call pause()
 
 		include 'otz.fl'   
 		include 'tetr.fl'
@@ -612,7 +612,7 @@ do iiips=1,2
 	!	write(*,*)' z1=',zver1(l1,ivert1),' z22=',zver2(l22,ivert2)
 	!	write(*,*)' dr2=',dr2,' l1=',l1,' l22=',l22
 	!	write(*,*)' verlin1=',verlin1(ivert1),' verlin2=',verlin2(ivert2)
-	!	pause
+	!	call pause()
 
 
 		if (dr2.lt.dr1) goto 772
@@ -636,11 +636,11 @@ do iiips=1,2
 		x2=xtop2(i2-ntop1)
 		z2=ztop2(i2-ntop1)
 	!	write(*,*)' x2=',x2,' z2=',z2
-	!	pause
+	!	call pause()
 	!	write(22,*)2
 	!	write(22,*)x1,-z1
 	!	write(22,*)x2,-z2
-	!	pause
+	!	call pause()
 		do isos=1,nsosmax
 			if(sosedi(isos,i1).eq.0) exit
 		end do
