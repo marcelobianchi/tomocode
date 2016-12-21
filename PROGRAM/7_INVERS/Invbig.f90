@@ -4,6 +4,8 @@ character*1 it,itold,ppss,rm,gr
 
 real matruzel(10000)
 integer muzel(10000)
+real x,z,l
+integer lixo
 
 real ist_p(10000),ist_s(10000),dv_zn_p(3),dv_zn_s(3)
 
@@ -89,7 +91,7 @@ i=0
 goto 82
 81	close(1)
 nrefmod=i-1
-!write(*,*)' nrefmod=',nrefmod
+write(*,*)' nrefmod=',nrefmod
 
 
 
@@ -164,7 +166,7 @@ if(nrps(1).ne.0) then
 		goto 722
 	721 ny_p=i-1
 	close(1)
-	!write(*,*)' ny_p=',ny_p
+	write(*,*)' ny_p=',ny_p
 end if
 
 if(nrps(2).ne.0) then
@@ -200,7 +202,7 @@ if(nrps(1).ne.0) then
 	npz_p=0
 	do n=1,ny_p
 		read(1,*)nt
-	!write(*,*)n,' ntop=',nt
+	        !write(*,*)n,' ntop=',nt
 		nt_p(n)=nt
 		do i=1,nt_p(n)
 			read(1,*)xtop_p(i,n),ztop_p(i,n),kpop_p(i,n),izone
@@ -229,7 +231,7 @@ if(nrps(2).ne.0) then
 		read(1,*)nt
 		if(nt.gt.nmax) nmax=nt
 		do i=1,nt
-			read(1,*)x,z,l
+			read(1,*)x,z,l,lixo,lixo
 		end do
 	end do
 	close(1)

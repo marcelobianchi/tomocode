@@ -6,6 +6,7 @@ real plll(2000),cfff(2000),zsurf(100),sumzone(100)
 real sumver(2000),zgv(2000),verlin(2000)
 integer ngrd(2000),kodgv(2000),nbl_y(2000)
 integer popor(:,:),nray(2)
+integer obr
 
 allocatable xgrd(:,:),zgrd(:,:),xnew(:),znew(:)
 allocatable ival(:,:),obr(:,:),ivzone(:),ivnew(:),popor

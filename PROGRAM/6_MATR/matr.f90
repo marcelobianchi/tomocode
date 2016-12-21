@@ -177,9 +177,9 @@ do iiips=1,2
 	end do
 	close(4)
 
-	open(1,file='../../DATA/'//re//'/'//ar//'/GRIDS/obr'//ppss//gr//'.dat')
-	read(1,*) nobr(iiips)
-	close(1)
+	open(4,file='../../DATA/'//re//'/'//ar//'/GRIDS/obr'//ppss//gr//'.dat')
+	read(4,*) nobr(iiips)
+	close(4)
 
 
 end do
@@ -237,10 +237,10 @@ do iiips=1,2
 	close(4)
 
 
-	open(1,file='../../DATA/'//re//'/'//ar//'/GRIDS/obr'//ppss//gr//'.dat')
-	read(1,*) nobr(iiips)
-	read(1,*)((obr(iiips,i,j),i=1,nobr(iiips)), j=1,2)
-	close(1)
+	open(4,file='../../DATA/'//re//'/'//ar//'/GRIDS/obr'//ppss//gr//'.dat')
+	read(4,*) nobr(iiips)
+	read(4,*)((obr(iiips,i,j),i=1,nobr(iiips)), j=1,2)
+	close(4)
 	write(*,*)' number of velocity parameters=',nobr(iiips)
 end do
 

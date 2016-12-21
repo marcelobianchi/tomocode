@@ -58,7 +58,7 @@ end do
 write(*,*)' cannot find RESIDUAL_CORRECTION in major_param.dat!!!'
 write(*,*)' .. or may be there is no file rays_tele_dir_initial.dat in the INIDATA folder .. '
 call pause()
-522 read(1,*)cor_y_n,max_val
+522 read(1,*) cor_y_n, max_val
 close(1)
 write(*,*)' cor_y_n',cor_y_n,' max_val',max_val
 !************** Sofia --> end ;-P ****************************************************
@@ -241,7 +241,7 @@ if (cor_y_n.eq.0) goto 121
 	open(122,file='../../DATA/'//re//'/INIDATA/rays_tele_dir_initial.dat')
 
 	90	read(122,*,end=121)fzt,tzt,zz,nkrat
-	        write(*,*)' 0) Beben: ',fzt,tzt,zz,nkrat
+	        !write(*,*)' 0) Beben: ',fzt,tzt,zz,nkrat
 
 		epizt=epic_dist(fzt,tzt,fi0,tet0)
 		call sfdec(fzt,tzt,zz,xzt,yzt,zzt,fi0,tet0)
@@ -252,7 +252,7 @@ if (cor_y_n.eq.0) goto 121
 		do ikr=1,nkrat
 			read(122,*)ips,ist,tobs
 			if (ist.gt.istmax) istmax=ist
-			write(*,*)' 0) picktime from station: ', ips,ist,tobs
+			!write(*,*)' 0) picktime from station: ', ips,ist,tobs
 			
 			fst=fstloc(ist)
 			tst=tstloc(ist)
@@ -260,7 +260,7 @@ if (cor_y_n.eq.0) goto 121
 
 			epi=epic_dist(fst,tst,fzt,tzt)
 			dist=epi*per*rz
-			write(*,*)' 0) stat - eq , ',fst,tst,fzt,tzt,'dist[km]=',dist,'dist[deg]=',epi
+			!write(*,*)' 0) stat - eq , ',fst,tst,fzt,tzt,'dist[km]=',dist,'dist[deg]=',epi
 
 			diskr=sqrt(dist*dist+zz*zz)
 
@@ -270,7 +270,7 @@ if (cor_y_n.eq.0) goto 121
 			end if
 
 			call ref_time(dist,zz,ips, tout,zmax,dip_angle)
-			write(*,*)' 0) tout ',tout
+			!write(*,*)' 0) tout ',tout
 			125 continue
 
                         start_res=tobs-tout
@@ -343,7 +343,7 @@ if (kod_dir.eq.0) goto 21
 ! *****************  Sofia - end ;-P  ******************************************
 
 	20	read(1,*,end=21)fzt,tzt,zz,nkrat
-	        write(*,*)' Beben: ',fzt,tzt,zz,nkrat
+	        !write(*,*)' Beben: ',fzt,tzt,zz,nkrat
 		resav_p=0
 		resav_s=0
 		nkr_p=0
@@ -352,12 +352,12 @@ if (kod_dir.eq.0) goto 21
 		epizt=epic_dist(fzt,tzt,fi0,tet0)
 		call sfdec(fzt,tzt,zz,xzt,yzt,zzt,fi0,tet0)
 		!call decsf(xzt,yzt,zzt,fi0,tet0,fff,ttt,zzz)
-		write(*,*)' epidist zu center: ',epizt
+		!write(*,*)' epidist zu center: ',epizt
 		nkr=0
 		do ikr=1,nkrat
 			read(1,*)ips,ist,tobs
 			if (ist.gt.istmax) istmax=ist
-			write(*,*)' picktime from station: ', ips,ist,tobs
+			!write(*,*)' picktime from station: ', ips,ist,tobs
 			!if (ips.eq.2) cycle
 			if (nkrat.lt.krat_min_dir) cycle
 			if (epizt.lt.epimin) cycle
@@ -371,7 +371,7 @@ if (kod_dir.eq.0) goto 21
 
 			epi=epic_dist(fst,tst,fzt,tzt)
 			dist=epi*per*rz
-			write(*,*)'stat - eq , ',fst,tst,fzt,tzt,'dist[km]=',dist,'dist[deg]=',epi
+			!write(*,*)'stat - eq , ',fst,tst,fzt,tzt,'dist[km]=',dist,'dist[deg]=',epi
 
 			diskr=sqrt(dist*dist+zz*zz)
 
@@ -381,7 +381,7 @@ if (kod_dir.eq.0) goto 21
 			end if
 
 			call ref_time(dist,zz,ips, tout,zmax,dip_angle)
-                        write(*,*)'tout ',tout
+                        !write(*,*)'tout ',tout
 			25 continue
 			if (ips.eq.1)then
 				resav_p=resav_p+(tobs-tout)
@@ -398,7 +398,7 @@ if (kod_dir.eq.0) goto 21
 		end do
 		resav_p=resav_p/nkr_p
 		resav_s=resav_s/nkr_s
-                write(*,*)'resav P ',resav_p
+                !write(*,*)'resav P ',resav_p
 
 		if (nkr.lt.krat_min_dir) goto 20
 		if (epizt.lt.epimin) goto 20 
