@@ -123,10 +123,10 @@ function plotOneHMap() {
  tomoeve)
   m=`getfigmodel`
   a=`getfigarea "$m"`
-  #f="$tomobase/DATA/$a/INIDATA/rays_local.dat"
-  f="$tomobase/DATA/$a/$m/TIMES/srces_true.dat"
+  f="$tomobase/DATA/$a/INIDATA/rays_local.dat"
+  #f="$tomobase/DATA/$a/$m/TIMES/srces_true.dat"
   message " Tomo used earthquakes"
-  [ ! -f "$f" ] && message " No file $f/rays_local.dat" && return
+  [ ! -f "$f" ] && message " No file $f" && continue
   awk 'NF >= 3 {print $1,$2}' $f |\
    psxy -R -J -O -K -Sc0.05 -Gblack 
   ;;
@@ -307,7 +307,7 @@ function plotprofile() {
   a=`getfigarea`
   f="$tomobase/DATA/$a/INIDATA"
   message " Tomo used earthquakes"
-  [ ! -f "$f/rays_local.dat" ] && message " No file $f/rays_local.dat" && return
+  [ ! -f "$f/rays_local.dat" ] && message " No file $f/rays_local.dat" && continue
   awk 'NF == 4 {print $1,$2,$3}' $f/rays_local.dat |\
    palong "$c1" "$c2" $evcol $maxl |\
    awk '{print $4,-1*$3}' |\

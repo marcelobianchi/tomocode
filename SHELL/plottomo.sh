@@ -64,11 +64,11 @@ do
 
 	if [ $toplot -le $vlast ]
 	then
-		plotprofile $toplot "$label2" "-Y-4.5" 350 tomo topo  moho tomoeve >> $ps
+		plotprofile $toplot "$label2" "-Y-4.5" 350 tomo topo  moho tomoeve sta >> $ps
 		label2="50a100/50a100:"EMPTY":WSne"
 		ashift=4.5
 		if [ $synt -ge 1 ]; then
-			plotprofile $toplot "$label2b" "-Y-5.5" 350 stomo moho tomoeve >> $ps
+			plotprofile $toplot "$label2b" "-Y-5.5" 350 stomo moho tomoeve sta >> $ps
 			label2b="50a100/100a500:"EMPTY":WSne"
 			ashift=10
 		fi
