@@ -213,7 +213,7 @@ do iar=start,end
 		write(11,*)1,nornt	
 		write(11,*)0	
 		write(11,*)0	
-		write(11,*)1	
+		write(11,*)0	
 		write(11,*)0	
 		write(11,*)0	
 		close(11)

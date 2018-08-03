@@ -140,6 +140,7 @@ if(nrps(1).ne.0) then
 	read(1,*) nvel_p
 	allocate(dvp_it(nvel_p),kpz_p(nvel_p),kobr_p(nvel_p,2))
 	read(1,*)((kobr_p(i,j),i=1,nvel_p), j=1,2)
+	dvp_it=0
 	close(1)
 end if
 
@@ -148,11 +149,9 @@ if(nrps(2).ne.0) then
 	read(1,*) nvel_s
 	allocate(dvs_it(nvel_s),kpz_s(nvel_s),kobr_s(nvel_s,2))
 	read(1,*)((kobr_s(i,j),i=1,nvel_s), j=1,2)
+	dvs_it=0
 	close(1)
 end if
-
-dvp_it=0
-dvs_it=0
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

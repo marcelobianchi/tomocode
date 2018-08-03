@@ -1,9 +1,9 @@
 #!/bin/bash -l
 
 ## BSHM CHECK
-[ -z "$BSHM" ] && echo "BSHM VAR NOT DEFINED." && exit
-[ ! -f "$BSHM/tomo.bshm" ] && echo "No tomo.bshm module found." && exit
-source "$BSHM/tomo.bshm" || exit
+[ -z "$tomobase" ] && echo "tomobase VAR NOT DEFINED." && exit
+[ ! -f "$tomobase/SHELL/tomo.bshm" ] && echo "No tomo.bshm module found." && exit
+source "$tomobase/SHELL/tomo.bshm" || exit
 
 ## LOAD
 [ ! -f "$tomobase/SHELL/helpme.sh" ] && echo "No helpme.sh support file found into '$tomobase'." && exit

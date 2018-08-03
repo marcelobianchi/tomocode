@@ -24,8 +24,8 @@ if [ $# -ge 1 ]; then
 fi
 
 # Setup
-export GMTDATA="/home_ad/mbianchi/bin/gmt.mapa"
-export tomobase="/home_ad/mbianchi/tomocode"
+export GMTDATA="/home/mbianchi/bin/gmt.mapa"
+export tomobase="/home/mbianchi/Work/tomocode"
 [ ! -d "${tomobase}" ] && echo "tomo.bshm: Invalid folder '${tomobase}', please edit tomo.bshm and set the tomoroot folder." && return 1
 export PATH=${tomobase}/SHELL:$PATH
 #

@@ -8,7 +8,7 @@ function streambln() {
  [ -f "$file" ] && awk 'NR>1 {print $0}' "$file" || echo ""
 }
 
-source $BSHM/tomo.bshm
+source $tomobase/SHELL/tomo.bshm
 [ `pwd` != "$tomobase/FIG_FILES" ] && echo "I should be in the fig-files dir !" && exit
 
 area=$(getfigarea)
