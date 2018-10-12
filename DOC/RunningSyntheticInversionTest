@@ -1,0 +1,85 @@
+Real Model
+==========
+
+A file:
+
+MODEL_LA/.real
+
+With:
+
+--begin
+## Model configuration file
+NumberOfIterations="3" # n as integer
+CodeOfEvents="0"       # 0/1
+OneDOptimization="0"   # 0/1
+--end
+
+The config folder with files:
+
+MODEL_LA/INI_PARAM/:
+	1Dmod_PARAM.DAT	 # 1d Optimization file
+	ini_model.dat    # Initial Model / for imposing a certain structure
+	ref_start.dat    # Start model for 3D inversion
+	grid_param.dat   # ? Empty file
+	major_param.dat  # Main configuration file
+	refmod.dat       # Reference model for current inversion, is automatically created
+	sethor.dat       # Config file for horizontal figures
+	setver.dat       # Config file for vertical figures
+	z_limit.bln      # ? Dont know
+
+Synthetic folder
+================
+
+A file:
+
+MODELSLA/.synt 
+
+with content:
+
+--begin
+onedopt=0
+nit=1
+--end
+
+The following config files:
+
+MODELSLA/INI_PARAM/:
+	1Dmod_PARAM.DAT	# As in Real
+	ini_model.dat	# As in Real
+	noise.dat	# A file describing the synthetic noise added to travel times
+	ref_start.dat	# As in Real
+	sethor.dat	# As in Real
+	z_limit.bln     # ??
+	anomaly.dat     # A file desbrigin the synthetic test model to be used
+	grid_param.dat  # ??
+	major_param.dat # As in Real
+	refmod.dat      # As in Real
+	ref_syn.dat     # A 1D reference model used to compute synthetic travel times (reference synthetic model)
+	setver.dat      # As in Real
+
+Running synthetic tests
+=======================
+
+Before running synthetic tests you should adjust the synthetic model.  For
+that you can use the two programs:
+
+'A_SET_SYN_HOR' and 'A_SET_SYN_VER'
+
+Those commands will generate the necessary grid to visualize the synthetic
+model on the 'FIG_FILES/SYN_INI/'.
+
+To real run the synthetic test you should attach a Synt model with:
+
+% source SHELL/tomo.bshm
+% tomo plug AREA SYNT_MODEL REAL_MODEL
+
+you can check the correctness of operation with:
+
+% tomo report
+
+and finally, you can run it w/:
+
+% tomo gosyn
+% ./synth.exe
+
+All the other stuff, is like real model.

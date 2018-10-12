@@ -139,8 +139,8 @@ function _run() {
     tomo report
     echo "Starting in 5 s ... "
     sleep 5
-    tomo cleanfig
-    tomo goreal && ./start_real.exe | tee $tomobase/RUN/log-$(date +%Y-%m-%dT%H:%M:%S).run
+    tomo cleanfigfiles
+    tomo goreal && ./start_real.exe 2>&1 | tee $tomobase/RUN/log-$(date +%Y-%m-%dT%H:%M:%S).run
 
     tomo gofig
     _plugged_models | while read area model it
@@ -444,7 +444,7 @@ function _report() {
             printf "Total of %d inversions plugged\n\n",niv;
          } else if (NR > 4) {
             if (substr($0,1,1) == "_") {
-                printf " A: %8s (%8s) M: %8s (%8s) Nit: %02d UmDOpt: %d\n",area,basearea,model,basemodel,nit,umdopt;
+                printf " A: %8s (%8s) M: %8s (%8s) Nit: %02d 1dOpt: %d\n",area,basearea,model,basemodel,nit,umdopt;
                 area = ""; model = ""; ct += 1; next;
             }
             if (area == "") {
@@ -484,28 +484,75 @@ function _report() {
 function _plug_model() {
     local area=$(echo $1 | _toupper)
     local model=$(echo $2 | _toupper)
-    checkmodel "$area" "$model" || return 1
+    local bmodel=$(echo $3 | _toupper)
     
+    checkmodel "$area" "$model" || return 1
+
     type=$(ros "$area" "$model")
-    [ $type == "r" ] && newareafile && _plug_model_append_real "$area" "$model" && return $?
-    [ $type == "s" ] && return 1
+    [ $type == "r" ] && newareafile || newsynfile
+    
+    _plug_model_append "$area" "$model" "$bmodel"
+    
+    return $?
 }
 
 function _plug_model_append() {
     local area=$(echo $1 | _toupper)
     local model=$(echo $2 | _toupper)
-    checkmodel "$area" "$model" || return 1
-    
+    local bmodel=$(echo $3 | _toupper)
+
     type=$(ros "$area" "$model")
-    [ $type == "r" ] && _plug_model_append_real "$1" "$2" && return $?
-    [ $type == "s" ] && _plug_model_append_synt "$1" "$2" && return $?
+    if [ $type == "r" ]; then
+        echo "Plug Real Model"
+        _plug_model_append_real "$area" "$model"
+        return $?
+    fi
+
+    if [ $type == "s" ]; then
+        echo "Plug Synt Model"
+        _plug_model_append_synt "$area" "$model" "$bmodel"
+        return $?
+    fi
+
+    return 1
+}
+
+function _increase_syn_count() {
+    tmp=$(mktemp)
+    
+    awk '{
+        if (NR == 1) {
+            print $1+1,$2,$3,$4;
+        } else {
+            print $0;
+        }
+    }' ${tomobase}/kod_syn_all.dat > $tmp
+    
+    mv $tmp "${tomobase}/kod_syn_all.dat"
+    
+    return;
 }
 
 function _plug_model_append_synt() {
     local area=$(echo $1 | _toupper)
     local model=$(echo $2 | _toupper)
+    local bmodel=$(echo $3 | _toupper)
+
     checkmodel "$area" "$model" "s" || return 1
-    echo "Not fully imple"
+    checkmodel "$area" "$bmodel" "r" || return 1
+
+    # Check that area/model is not plugged
+    ct=$(awk -v area=$area -v model=$model '$1==area && $2==model {print $0}' $tomobase/kod_syn_all.dat | wc -l)
+    [ $ct -gt 0 ] && echo "Area ($area) Model ($model) already plugged $ct times" && return 1
+
+    source "$tomobase/DATA/$area/$model/.synt"
+
+    _increase_syn_count
+    cat << EOF >> ${tomobase}/kod_syn_all.dat
+${area}###${area}
+${model}###${bmodel}###${nit}###${onedopt}
+________________________________ # separation line .. dont remove ! or just repeat for different
+EOF
 }
 
 function _plug_model_append_real() {
@@ -551,11 +598,21 @@ function _list_models() {
 ##
 
 function checkmodel() {
-    [ -z "$1" ] && echo "Area cannot be empty" && return 1
-    [ -z "$2" ] && echo "Model cannot be empty" && return 1
+    [ -z "$1" ] && echo "Area cannot be empty -- $3" && return 1
+    [ -z "$2" ] && echo "Model cannot be empty -- $3" && return 1
     [ ! -d "$tomobase/DATA/$1/$2/" ] && echo "Area/Model = $1/$2 is invalid" && return 1
     [ ! -z "$3" -a "$3" == "r" -a ! -f "$tomobase/DATA/$1/$2/.real" ] && echo "$1/$2 is not a valid real/synt model" && return 1
     [ ! -z "$3" -a "$3" == "s" -a ! -f "$tomobase/DATA/$1/$2/.synt" ] && echo "$1/$2 is not a valid real/synt model" && return 1
+    return 0
+}
+
+function newsynfile() {
+    cat << EOF > ${tomobase}/kod_syn_all.dat
+0  number of models
+**********************************
+synmod:###realmod:###iterations:###kod_1D
+**********************************
+EOF
     return 0
 }
 
@@ -620,6 +677,24 @@ function getnhor() {
 function getnver() {
  [ ! -f "$tomobase/DATA/$area/$model/INI_PARAM/setver.dat" ] && echo "Invalid $area/$model folder" && return 1
  awk 'NR==1 {print $1}' "$tomobase/DATA/$area/$model/INI_PARAM/setver.dat"
+}
+
+function getareacenter() {
+    local area=$(getfigarea)
+    local model=$(getfigmodel)
+    grep 'AREA_CENTER' -A 1 $tomobase/DATA/$area/$model/INI_PARAM/major_param.dat | tail -1 | awk '{print $1,$2}' 
+}
+
+function gethorcoords() {
+    [ ! -z "$1" ] && clon=$1 || clon=0.0
+    [ ! -z "$2" ] && clat=$2 || clat=0.0
+    [ ! -z "$3" -a "$3" == "R" ] && rc=1 || rc=0
+    local area=$(getfigarea)
+    local model=$(getfigmodel)
+
+    awk -v clon=$clon -v clat=$clat 'NR==3 {print clon+$1, clon+$2, clat+$4, clat+$5}' \
+        $tomobase/DATA/$area/$model/INI_PARAM/sethor.dat |\
+        ( [ $rc -eq 1 ] && awk '{printf "-R%f/%f/%f/%f",$1,$2,$3,$4}' || cat )
 }
 
 function getnumberfromsynth() {

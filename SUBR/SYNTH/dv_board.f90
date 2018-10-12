@@ -15,7 +15,7 @@ nyy=(ybr2(ips)-ybr1(ips))/(dybr1(ips)+dybr2(ips))
 nzz=(zbr2(ips)-zbr1(ips))/(dzbr1(ips)+dzbr2(ips))
 if(nzz.eq.0.) nzz=1
 
-do ixx=1,nxx-1
+do ixx=1,nxx
 	x1=xbr1(ips)+(ixx-1)*(dxbr1(ips)+dxbr2(ips))
 	x2=xbr1(ips)+ ixx   *(dxbr1(ips)+dxbr2(ips))
 	if((xx-x1)*(xx-x2).le.0.) exit
@@ -23,7 +23,7 @@ end do
 
 if(xx.ge.x1+dxbr1(ips)) return
 
-do iyy=1,nyy-1
+do iyy=1,nyy
 	y1=ybr1(ips)+(iyy-1)*(dybr1(ips)+dybr2(ips))
 	y2=ybr1(ips)+ iyy   *(dybr1(ips)+dybr2(ips))
 	if((yy-y1)*(yy-y2).le.0.) exit

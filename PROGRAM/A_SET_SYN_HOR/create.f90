@@ -157,7 +157,7 @@ do ips=1,2
 					dv=vert_brd(xxx,yyy,zzz,ips)
 				end if
 				v_ini(ifi,itet)=dv
-				write(*,*)' fi=',fff,' tet=',ttt,' dv=',dv
+				!write(*,*)' fi=',fff,' tet=',ttt,' dv=',dv
 				write(*,*)' x=',xxx,' y=',yyy,' z=',zzz,' dv=',dv
 				!call pause()
 			end do

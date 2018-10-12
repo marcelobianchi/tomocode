@@ -11,7 +11,7 @@ rm -f .gmt*
 anotFontSize=10
 
 ## Both
-export mapP=M
+export mapP=Q$(getareacenter|awk '{print $1}')"/"$(getareacenter|awk '{print $2}')"/"
 export mapW=7
 
 gmtset BASEMAP_TYPE plain
@@ -36,7 +36,7 @@ export pmarks=100
 export MAPR="-R-71/-64/-29/-24"
 export eveSize=0.05
 
-export TOMOSET=ANDES
+export TOMOSET=GENERAL
 
 ## CPT
 export cptz="-10/10/1"
@@ -248,7 +248,7 @@ function plotprofile() {
  fi
 
  R="-R$x1/$x2/$y1/$y2"
- RT=`echo $R | awk -F"/" 'BEGIN {OFS="/"} {print $1,$2,0.01,6.0}'`
+ RT=`echo $R | awk -F"/" 'BEGIN {OFS="/"} {print $1,$2,0.01,1.5}'`
 
  message "Pofile: $id ($gridfile) $name $R -- $RT"
 
@@ -316,7 +316,7 @@ function plotprofile() {
  done
 
  ### Topo part of the section
- psxy /dev/null $RT -JX$mapW/$topH -O -K -Sp.01 -Y$sectionH -B0/4.5$axis
+ psxy /dev/null $RT -JX$mapW/$topH -O -K -Sp.01 -Y$sectionH -B0/1.0Wne
  for i in $*
  do
  case $i in
@@ -833,6 +833,10 @@ cat << EOF | awk '{print $1,$2}'
 -69.24 -26.16 X6 BB22
 -69.43 -25.37 X6 BB23
 EOF
+else 
+    local area=$(getfigarea)
+    local model=$(getfigmodel)
+    awk '{print $1,$2}' $tomobase/DATA/$area/INIDATA/stations_local.dat
 fi
 }
 

@@ -15,7 +15,7 @@ nfi=(fcr2-fcr1)/(dfcr1+dfcr2)
 ntet=(tcr2-tcr1)/(dtcr1+dtcr2)
 
 
-do ifi=1,nfi-1
+do ifi=1,nfi
 	f1=fcr1+(ifi-1)*(dfcr1+dfcr2)
 	f2=fcr1+ ifi   *(dfcr1+dfcr2)
 	if((fi-f1)*(fi-f2).le.0.) exit
@@ -25,7 +25,7 @@ end do
 
 if(fi.ge.f1+dfcr1) return
 
-do itet=1,ntet-1
+do itet=1,ntet
 	t1=tcr1+(itet-1)*(dtcr1+dtcr2)
 	t2=tcr1+ itet   *(dtcr1+dtcr2)
 	if((tet-t1)*(tet-t2).le.0.) exit

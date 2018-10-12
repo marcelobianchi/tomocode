@@ -15,8 +15,12 @@ vfirst=1
 hlast=`ls -1 r.h.*.gmt | wc -l`
 vlast=`ls -1 r.v.*.gmt | wc -l`
 
-#BRAZIL# MAPR="-R-67/-33/-37/-5"
-MAPR="-R-71/-64/-30/-24"
+clon=$(getareacenter | awk '{print $1}')
+clat=$(getareacenter | awk '{print $2}')
+
+#MAPR="-R-70/-37/-32/-6"
+# MAPR="-R-71/-64/-30/-24"
+MAPR=$(gethorcoords $clon $clat R)
 
 ps="results.ps"
 
@@ -42,10 +46,10 @@ echo "Ver $vfirst $vlast"
 echo "Max: $max"
 echo ""
 
-label="1a2WESN"
-labelb="5a10WEsN"
-label2="50a100/50a100WSne"
-label2b="50a100WSne"
+label="1a15WESN"
+labelb="1a15WEsN"
+label2="50a500/50a150WSe"
+label2b="50a500/50a150WSe"
 
 for toplot in `seq 1 $max`
 do
@@ -53,24 +57,26 @@ do
 	if [ $toplot -le $hlast ]
 	then
 		plotOneHMap $toplot "$label" "   " tomo $what >> $ps
+		[ $toplot -eq 1 ] && getareacenter | psxy -R -J -O -K -Sc0.2 -Gblack >> $ps
 		[ $toplot -eq 1 -a $vlast -ge 1 ] && addprofiles 1-$vlast >> $ps
 		if [ $synt -ge 1 ]; then
-			plotOneHMap $toplot "$labelb" "-Y8.2"        stomo $what >> $ps
-			g_shift -Y-8.2 >> $ps
+			plotOneHMap $toplot "$labelb" "-Y8.3"        stomo $what >> $ps
+			[ $toplot -eq 1 ] && getareacenter | psxy -R -J -O -K -Sc0.2 -Gblack >> $ps
+			g_shift -Y-8.3 >> $ps
 		fi
-		label="1a2wESN"
-		labelb="1a2wEsN"
+		label="1a15wESN"
+		labelb="1a15wEsN"
 	fi
 
 	if [ $toplot -le $vlast ]
 	then
-		plotprofile $toplot "$label2" "-Y-4.5" 350 tomo topo  moho tomoeve sta >> $ps
-		label2="50a100/50a100:"EMPTY":WSne"
-		ashift=4.5
+		ashift=5.0
+		plotprofile $toplot "$label2" "-Y-$ashift" 900 tomo topo  moho tomoeve sta >> $ps
+		label2="50a500/50a150:"EMPTY":WSe"
 		if [ $synt -ge 1 ]; then
-			plotprofile $toplot "$label2b" "-Y-5.5" 350 stomo moho tomoeve sta >> $ps
-			label2b="50a100/100a500:"EMPTY":WSne"
-			ashift=10
+			plotprofile $toplot "$label2b" "-Y-5.5" 900 stomo topo moho tomoeve >> $ps
+			label2b="50a500/50a150:"EMPTY":WSe"
+			ashift=10.5
 		fi
 		g_shift -Y$ashift >> $ps
 	fi
