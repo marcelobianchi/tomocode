@@ -158,7 +158,7 @@ do ips=1,2
 				end if
 				v_ini(ifi,itet)=dv
 				!write(*,*)' fi=',fff,' tet=',ttt,' dv=',dv
-				write(*,*)' x=',xxx,' y=',yyy,' z=',zzz,' dv=',dv
+				! write(*,*)' x=',xxx,' y=',yyy,' z=',zzz,' dv=',dv
 				!call pause()
 			end do
 		end do
