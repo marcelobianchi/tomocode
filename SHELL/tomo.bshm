@@ -31,7 +31,7 @@ export PATH=${tomobase}/SHELL:$PATH
 #
 
 # Setup bash completion
-WLIST="list report plug plugappend plugfig clonemodel cleanmodel cleanfigfiles calcfig freeze saveParams gobase gogmt gofig goreal gosyn godata help ls"
+WLIST="list report plug plugappend plugfig clonemodel cleanmodel cleanfigfiles calcfig freeze saveParams gobase gogmt gofig goreal gosyn godata help ls go"
 complete -W "$WLIST" tomo
 
 #######################################################################################################
@@ -94,6 +94,10 @@ function tomo() {
         ;;
 
   # Folder switching commands))
+        go)             # Move to START folder
+            cd "${tomobase}/PROGRAM/START"
+            return
+        ;;
         gobase)         # Move to tomocode base folder
             cd "${tomobase}"
             return
@@ -178,29 +182,29 @@ function _cloneModel() {
     nmodel=$(echo $nmodel | _toupper)
     done
     
-    _newbasemodel "$area" "$nmodel" || return 1
+    _newbasemodel "$area" "$nmodel" $(ros "$area" "$model") || return 1
 
-    echo "Copying INO_PARAM folder"
+    echo "Copying INI_PARAM folder"
     rsync -av "$tomobase/DATA/$area/$model/INI_PARAM/" "$tomobase/DATA/$area/$nmodel/INI_PARAM/" | awk '{print " ",$0}'
     
-    if [ -f "$tomobase/DATA/$area/$model/area.dat" ]; then
-    cp -v "$tomobase/DATA/$area/$model/area.dat" "$tomobase/DATA/$area/$nmodel/" | awk '{print " ",$0}'
-    fi
-
-    if [ $(diff "$tomobase/DATA/$area/$model/.real" "$tomobase/DATA/$area/$nmodel/.real" 2>&1 |wc -l) -ne 0 ]; then
+    if [ -f $tomobase/DATA/$area/$nmodel/.real ]; then
         echo "Please adjust the .real file for fitting your new needs !"
-        echo "It differs from the source model!"
+        echo ""
         diff "$tomobase/DATA/$area/$model/.real" "$tomobase/DATA/$area/$nmodel/.real"
     fi
 
-    read -p "Plug it?" ans
-    [ $ans == "y" -o $ans == "Y" ] && tomo plug "$area" "$nmodel"
+    if [ -f $tomobase/DATA/$area/$nmodel/.synt ]; then
+        echo "Please adjust the .synt file for fitting your new needs !"
+        echo ""
+        diff "$tomobase/DATA/$area/$model/.synt" "$tomobase/DATA/$area/$nmodel/.synt"
+    fi
 }
 
 function _newbasemodel() {
     local area=$(echo $1 | _toupper)
     local model=$(echo $2 | _toupper)
-
+    local rors=$(echo $3 | _toupper)
+    
     checkmodel "$area" "$model" > /dev/null
     [ $? -eq 0 ] && echo "Area/Model ($area/$model) exists" && return 1
 
@@ -220,12 +224,21 @@ XXXXXXXX
            0 # Add a mask to the results
 EOF
 
-    cat << EOF > "$tomobase/DATA/$area/$model/.real" || return 1
+    if [ "$rors" == "R" ] ; then
+        cat << EOF > "$tomobase/DATA/$area/$model/.real" || return 1
 ## Model configuration file
 NumberOfIterations="3" # n as integer
 CodeOfEvents="0"       # 0/1
 OneDOptimization="0"   # 0/1
 EOF
+    elif [ "$rors" == "S" ] ; then
+        cat << EOF > "$tomobase/DATA/$area/$model/.synt" || return 1
+onedopt=0  # 1D Optimization
+nit=1      # Number of Iterations
+EOF
+    else
+        echo "Unknow model type. Leaving it UNSET!"
+    fi
     return 0
 }
 
