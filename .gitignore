@@ -1,2 +1,8 @@
 *.exe
 *.o
+FIG_FILES/**
+VISUAL/area.dat
+all_areas.dat
+kod_syn.dat
+kod_syn_all.dat
+model.dat

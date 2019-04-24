@@ -104,7 +104,6 @@ do iar=1,n_ar
 	if (kod_local.eq.0) goto 78
 
 	if(kref.eq.1) then
-
 		write(*,*) '*************************************'
 		write(*,*)'reference table, start 1D model'
 		write(*,*) '*************************************'
@@ -132,107 +131,111 @@ do iar=1,n_ar
 	78 continue
 	!call pause()
 
-
-	write(*,*) '*************************************'
-	write(*,*)'reference table, optimized 1D model'
-	write(*,*) '*************************************'
-
-	call writemodel(re, ar, 1, 1, koe)
-	i=runcommand('..\..\LIN_PROG\0_REF_RAYS\refrays.exe')
-	if (pausing) call pause()
-
-	if (kod_local.eq.1) then
+	if (full.or.loccalc) then
 		write(*,*) '*************************************'
-		write(*,*)'location in optimized 1D model'
+		write(*,*)'reference table, optimized 1D model'
 		write(*,*) '*************************************'
 
-		i=runcommand('..\..\LIN_PROG\1_LOC_EVENT\locate.exe')
+		call writemodel(re, ar, 1, 1, koe)
+		i=runcommand('..\..\LIN_PROG\0_REF_RAYS\refrays.exe')
 		if (pausing) call pause()
-	end if
 
-	write(*,*) '*************************************************'
-	write(*,*)'SELECT DATA for itereative Tomo inversion'
-	write(*,*) '*************************************************'
-	i=runcommand('..\0_SELECT_DATA\select.exe')
-	if (pausing) call pause()
+		if (kod_local.eq.1) then
+			write(*,*) '*************************************'
+			write(*,*)'location in optimized 1D model'
+			write(*,*) '*************************************'
 
+			i=runcommand('..\..\LIN_PROG\1_LOC_EVENT\locate.exe')
+			if (pausing) call pause()
+		end if
+	endif 
+	
+	if (full.or.selcalc) then
+		write(*,*) '*************************************************'
+		write(*,*)'SELECT DATA for itereative Tomo inversion'
+		write(*,*) '*************************************************'
+		i=runcommand('..\0_SELECT_DATA\select.exe')
+		if (pausing) call pause()
+		if (.not.full) STOP
+	endif
 
 ! Execute the inversion for grids with different orientations:
+	if (.not.full) niter = 1
 	do iter=1,niter	
-
 		write(it,'(i1)')iter
 		call writemodel(re, ar, iter, 1, koe)
 
-		write(*,*)'	 ****************************************************'
-		write(*,*)'	 3D rays tracing'
-		i=runcommand('..\1_3D_LOCATE\3d_locate.exe')
-		write(*,*)'	 ****************************************************'
-		if (pausing) call pause()
+		if (full.or.loccalc) then
+			write(*,*)'	 ****************************************************'
+			write(*,*)'	 3D rays tracing'
+			i=runcommand('..\1_3D_LOCATE\3d_locate.exe')
+			write(*,*)'	 ****************************************************'
+			if (pausing) call pause()
+			if (.not.full) STOP
+		endif 
 
 999		continue
 
 		open(11,file='../../VISUAL/area.dat')
-		write(11,'(a8)')re		
-		write(11,'(a8)')ar		
-		write(11,*)iter		
-		write(11,*)1,nornt	
-		write(11,*)0	
-		write(11,*)0	
-		write(11,*)0	
-		write(11,*)0	
-		write(11,*)0	
+		write(11,'(a8)')re
+		write(11,'(a8)')ar
+		write(11,*)iter
+		write(11,*)1,nornt
+		write(11,*)0
+		write(11,*)0
+		write(11,*)0
+		write(11,*)0
+		write(11,*)0
 		close(11)
 	
-		! now the travel time residual should be calculated 
-		! (Corrected for Moho depth and station elevation!)
-
 		if(kod_param.eq.1) then ! if grid is paramized in nodes:
-			do igr=1,nornt
-				call writemodel(re, ar, iter, igr, -1)
-				if(iter.eq.1) then
+			if (full.or.invcalc) then
+				do igr=1,nornt
+					call writemodel(re, ar, iter, igr, -1)
+					if(iter.eq.1) then
+						write(*,*)'	 ****************************************************'
+						write(*,*)'	 Compute the ray density'
+						i=runcommand('..\2_RAY_DENSITY\plotray.exe')
+						write(*,*)'	 ****************************************************'
+						if (pausing) call pause()
+
+						write(*,*)'	 ****************************************************'
+						write(*,*)'	 Compute the parameterization grid:'
+						i=runcommand('..\3_GRID\grid.exe')
+						write(*,*)'	 ****************************************************'
+						if (pausing) call pause()
+
+						write(*,*)'	 ****************************************************'
+						write(*,*)'	 Compute ... :'
+						i=runcommand('..\4_TETRAD\tetrad.exe')
+						write(*,*)'	 ****************************************************'
+						if (pausing) call pause()
+
+						write(*,*)'	 ****************************************************'
+						write(*,*)'	 Compute Matrix :'
+						i=runcommand('..\5_SOSEDI\add_matr.exe')
+						write(*,*)'	 ****************************************************'
+						if (pausing) call pause()
+					end if
 					write(*,*)'	 ****************************************************'
-					write(*,*)'	 Compute the ray density'
-					i=runcommand('..\2_RAY_DENSITY\plotray.exe')
+					write(*,*)'	 Assembly matrix:'
+					i=runcommand('..\6_MATR\matr.exe')
 					write(*,*)'	 ****************************************************'
 					if (pausing) call pause()
 
 					write(*,*)'	 ****************************************************'
-					write(*,*)'	 Compute the parameterization grid:'
-					i=runcommand('..\3_GRID\grid.exe')
+					write(*,*)'	 Compute Inversion :'
+					i=runcommand('..\7_INVERS\invbig.exe')
 					write(*,*)'	 ****************************************************'
 					if (pausing) call pause()
+				end do
 
-					write(*,*)'	 ****************************************************'
-					write(*,*)'	 Compute ... :'
-					i=runcommand('..\4_TETRAD\tetrad.exe')
-					write(*,*)'	 ****************************************************'
-					if (pausing) call pause()
-
-					write(*,*)'	 ****************************************************'
-					write(*,*)'	 Compute Matrix :'
-					i=runcommand('..\5_SOSEDI\add_matr.exe')
-					write(*,*)'	 ****************************************************'
-					if (pausing) call pause()
-
-				end if
 				write(*,*)'	 ****************************************************'
-				write(*,*)'	 Assembly matrix:'
-				i=runcommand('..\6_MATR\matr.exe')
+				write(*,*)'	 Compute final 3d model from different grids:'
+				i=runcommand('..\8_3D_MODEL\mod_3d.exe')
 				write(*,*)'	 ****************************************************'
 				if (pausing) call pause()
-
-				write(*,*)'	 ****************************************************'
-				write(*,*)'	 Compute Inversion :'
-				i=runcommand('..\7_INVERS\invbig.exe')
-				write(*,*)'	 ****************************************************'
-				if (pausing) call pause()
-			end do
-
-			write(*,*)'	 ****************************************************'
-			write(*,*)'	 Compute final 3d model from different grids:'
-			i=runcommand('..\8_3D_MODEL\mod_3d.exe')
-			write(*,*)'	 ****************************************************'
-			if (pausing) call pause()
+			endif
 		else if(kod_param.eq.2) then ! if grid is paramized in cells:
 			do igr=1,nornt
 				call writemodel(re, ar, iter, igr, -1)

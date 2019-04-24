@@ -103,7 +103,7 @@ do imodel=1,num_models
 		call copyfile('..\..\DATA\'//re//'\'//ar//'\INI_PARAM\ref_syn.dat','..\..\DATA\'//re//'\'//ar//'\INI_PARAM\refmod.dat')
 		if (pausing) call pause()
 
-		call writemodel(re, ar, 0, 0)
+		call writemodel(re, ar, 0, 0, 0)
 
 		write(*,*) '*************************************'
 		write(*,*) 'reference table, synthetic 1D model'
@@ -118,6 +118,7 @@ do imodel=1,num_models
 
 		i=runcommand('..\B_SYNTH_TIMES\rays.exe')
 		if (pausing) call pause()
+		if (.not.full) STOP
 	end if
 
 	call copyfile('..\..\DATA\'//re//'\'//ar//'\INI_PARAM\ref_start.dat', '..\..\DATA\'//re//'\'//ar//'\INI_PARAM\refmod.dat')
@@ -181,12 +182,12 @@ do imodel=1,num_models
 			end do
 			close(21)
 
-			call writemodel(re, ar, 0, 0)
+			call writemodel(re, ar, 0, 0, 0)
 			i=runcommand('..\..\1D_MODEL\START_1D\start_real.exe')
 			if (pausing) call pause()
 		end if
 
-		call writemodel(re, ar, 1, 1)
+		call writemodel(re, ar, 1, 1, 0)
 		write(*,*) '*************************************'
 		write(*,*) 'reference table, final 1D model'
 		write(*,*) '*************************************'
@@ -211,7 +212,7 @@ do imodel=1,num_models
 		write(*,*)'************************************************************'
 		write(*,*)' model:',ar,' iteration:',iter
 		write(*,*)'************************************************************'
-		call writemodel(re, ar, iter, 1)
+		call writemodel(re, ar, iter, 1, 0)
 
 		if (full.or.loccalc) then
 			write(*,*)'****************************************************'
@@ -224,7 +225,7 @@ do imodel=1,num_models
 		if(kod_param.eq.1) then
 			if (full.or.invcalc) then
 				do igr=1,nornt
-					call writemodel(re, ar, iter, igr)
+					call writemodel(re, ar, iter, igr, 0)
 					if(iter.eq.1) then
 						write(*,*)'	 ****************************************************'
 						write(*,*)'	 Compute the ray density'
@@ -251,7 +252,7 @@ do imodel=1,num_models
 
 		else if(kod_param.eq.2) then
 			do igr=1,nornt
-				call writemodel(re, ar, iter, igr)
+				call writemodel(re, ar, iter, igr, 0)
 				if(iter.eq.1) then
 
 					write(*,*)'	 ****************************************************'
