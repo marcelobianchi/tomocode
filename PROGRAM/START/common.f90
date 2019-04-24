@@ -53,16 +53,16 @@ subroutine readmajor(re, ar, error, kod_local, nornt, kod_param)
 
 end subroutine readmajor
 
-subroutine writemodel(re, ar, iter, igr)
+subroutine writemodel(re, ar, iter, igr, koe)
 	character*8 ar, re
 	integer iter, igr
 
 	open(11,file='../../model.dat')
-	write(11,'(a8)')re
-	write(11,'(a8)')ar
-	write(11,'(i1)')iter
-	write(11,'(i1)')igr
-	write(11,'(i1)')0
+	write(11,'(a8)') re
+	write(11,'(a8)') ar
+	write(11,'(i1)') iter
+	write(11,'(i1)') igr
+	write(11,'(i1)') koe
 	close(11)
 end subroutine writemodel
 

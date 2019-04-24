@@ -31,7 +31,7 @@ export PATH=${tomobase}/SHELL:$PATH
 #
 
 # Setup bash completion
-WLIST="list report plug plugappend plugfig clonemodel cleanmodel cleanfigfiles calcfig freeze saveParams gogmt gofig goreal gosyn godata help ls"
+WLIST="list report plug plugappend plugfig clonemodel cleanmodel cleanfigfiles calcfig freeze saveParams gobase gogmt gofig goreal gosyn godata help ls"
 complete -W "$WLIST" tomo
 
 #######################################################################################################
@@ -94,6 +94,10 @@ function tomo() {
         ;;
 
   # Folder switching commands))
+        gobase)         # Move to tomocode base folder
+            cd "${tomobase}"
+            return
+        ;;
         godata)         # Move to the current tomobase/DATA folder
             cd "${tomobase}/DATA/"
             return
@@ -295,7 +299,7 @@ function areafrommodel() {
             found = 1;
             nextfile;
         }
-        area  == substr($0,1,8);
+        area  = substr($0,1,8);
     }
     END { if (found) print area; }' "$tomobase/kod_syn_all.dat")
     [ ! -z "$area" ] && echo $area && return 0
