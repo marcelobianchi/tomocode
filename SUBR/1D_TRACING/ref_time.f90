@@ -12,7 +12,11 @@ depth=-900
 alfa=-900
 !write(*,*)depzt,hztref(ips,iztref)
 !pause
-if(depzt.gt.hztref(ips,iztref)) return
+if(depzt.gt.hztref(ips,iztref)) then
+        write(*,*) 'Warning on reftime (',depzt,hztref(1,iztref),').'
+        return
+endif
+
 if(depzt.lt.hztref(ips,1)) then
 	ih=1
 	h1=hztref(ips,1)

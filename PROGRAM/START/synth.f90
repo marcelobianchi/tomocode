@@ -77,7 +77,8 @@ if ((num_models.ne.1).and.(.not.full)) then
 end if
 
 do imodel=1,num_models
-	call readmodels(i, re_real, ar_real, re_syn, ar_syn, niter, kod_1d)
+	call readmodels(imodel, re_real, ar_real, re_syn, ar_syn, niter, kod_1d)
+
 	write(*,'(a12,a1,a8,a1,a8)')' input:',' ',re_real,'/',ar_real
 	write(*,'(a12,a1,a8,a1,a8)')' output:',' ',re_syn,'/',ar_syn
 	write(*,'(a12,i3,a,i3)')' iterations:',niter,' kod_1d:',kod_1d

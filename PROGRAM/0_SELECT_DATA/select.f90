@@ -357,7 +357,7 @@ if (kod_dir.eq.0) goto 21
 		do ikr=1,nkrat
 			read(1,*)ips,ist,tobs
 			if (ist.gt.istmax) istmax=ist
-			!write(*,*)' picktime from station: ', ips,ist,tobs
+			write(*,*)' picktime from station: ', ips,ist,tobs
 			!if (ips.eq.2) cycle
 			if (nkrat.lt.krat_min_dir) cycle
 			if (epizt.lt.epimin) cycle
@@ -371,7 +371,7 @@ if (kod_dir.eq.0) goto 21
 
 			epi=epic_dist(fst,tst,fzt,tzt)
 			dist=epi*per*rz
-			!write(*,*)'stat - eq , ',fst,tst,fzt,tzt,'dist[km]=',dist,'dist[deg]=',epi
+			write(*,*)'stat - eq , ',fst,tst,fzt,tzt,'dist[km]=',dist,'dist[deg]=',epi
 
 			diskr=sqrt(dist*dist+zz*zz)
 
@@ -381,7 +381,7 @@ if (kod_dir.eq.0) goto 21
 			end if
 
 			call ref_time(dist,zz,ips, tout,zmax,dip_angle)
-                        !write(*,*)'tout ',tout
+                        !write(*,*)'tout ',tout,' zmax=',zmax,' dip',dip_angle
 			25 continue
 			if (ips.eq.1)then
 				resav_p=resav_p+(tobs-tout)
@@ -423,10 +423,10 @@ if (kod_dir.eq.0) goto 21
 			if(ipskr(ikr).eq.2) nrds=nrds+1
 
 			write(11)istkr(ikr),ipskr(ikr),tobkr(ikr),trefkr(ikr)
-			!write(*,*)istkr(ikr),ipskr(ikr),tobkr(ikr),trefkr(ikr)
+			write(*,*)istkr(ikr),ipskr(ikr),tobkr(ikr),trefkr(ikr)
 		end do
 
-		!write(*,*)resav_p,resav_s
+		!write(*,*) ' RESAV_P/RESAV_S',resav_p,resav_s
 		!call pause()
 
 	goto 20

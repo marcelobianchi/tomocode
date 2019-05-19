@@ -93,7 +93,7 @@ subroutine readmodels(which, re_real, ar_real, re_syn, ar_syn, niter, kod_1d)
 	read(61,*) 
 	read(61,*) 
 	read(61,*) 
-	do i = 1, which-1
+	do i = 1, which
 		read(61,'(a8,3x,a8,3x,i1)')re_syn,re_real
 		read(61,'(a8,3x,a8,3x,i1,3x,i1)')ar_syn,ar_real,niter,kod_1d
 		read(61,*)

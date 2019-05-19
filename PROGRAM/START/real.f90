@@ -131,7 +131,7 @@ do iar=1,n_ar
 	78 continue
 	!call pause()
 
-	if (full.or.loccalc) then
+	if (full.or.loccalc.or.selcalc) then
 		write(*,*) '*************************************'
 		write(*,*)'reference table, optimized 1D model'
 		write(*,*) '*************************************'
@@ -140,6 +140,9 @@ do iar=1,n_ar
 		i=runcommand('..\..\LIN_PROG\0_REF_RAYS\refrays.exe')
 		if (pausing) call pause()
 
+	end if
+	
+	if (full.or.loccalc) then
 		if (kod_local.eq.1) then
 			write(*,*) '*************************************'
 			write(*,*)'location in optimized 1D model'
@@ -151,6 +154,7 @@ do iar=1,n_ar
 	endif 
 	
 	if (full.or.selcalc) then
+		call writemodel(re, ar, 1, 1, koe)
 		write(*,*) '*************************************************'
 		write(*,*)'SELECT DATA for itereative Tomo inversion'
 		write(*,*) '*************************************************'
