@@ -1,3 +1,3 @@
 BIN=refrays.exe
 LIBS=""
-EXTRAOBJ="../../SUBR/1D_TRACING/reftrace.o ../../SUBR/1D_TRACING/vrefmod.o"
+EXTRAOBJ="../../SUBR/1D_TRACING/reftrace.o ../../SUBR/1D_TRACING/vrefmod.o ../../SUBR/OTHERS/pause.o"

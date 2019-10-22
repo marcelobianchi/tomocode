@@ -3,15 +3,17 @@
 comp=""
 for d in 0_REF_RAYS  1_LOC_EVENT
 do
- [ -d $d ] && echo "Working on: $d" || continue
- if [ -f ./CONFIG/$d ] 
+ [ -d "$d" ] && echo "Working on: $d" || continue
+ if [ -f ./CONFIG/"$d" ] 
  then 
-   source ./CONFIG/$d
+   source ./CONFIG/"$d"
  else 
    echo " W:> No config file $d"
+   EXTRAOBJ=""
+   LIB=""
  fi
   
- cd $d
+ cd "$d"
  OBJ=`ls -1 *.f90 | sed -e 's/.f90/.o/g' | tr "\n" " "`
 
  cat << EOF > Makefile
@@ -32,7 +34,7 @@ clean:
 	@rm -f *.o \$(BIN)
 
 fullclean: clean
-	@rm \$(BIN)
+	@rm -f \$(BIN)
 
 install:
 	@cp \$(BIN) \$(DESTDIR)
@@ -42,10 +44,11 @@ EOF
  cd - > /dev/null
 done
 
+
 echo "all:" > Makefile
 for d in $comp
 do
- echo -e "\t@echo -e \"\e[31;1mWorking on: $d\e[m\"" >> Makefile
+ echo -e "\t@echo \"\e[31;1mWorking on: $d\e[m\"" >> Makefile
  echo -e "\t@make --no-print-directory -C $d" >> Makefile
  echo -e "\t@echo \"\"" >> Makefile
 done
@@ -54,7 +57,7 @@ echo "" >> Makefile
 echo "clean:" >> Makefile
 for d in $comp
 do
- echo -e "\t@echo -e \"\e[31;1mWorking on: $d\e[m\"" >> Makefile
+ echo -e "\t@echo \"\e[31;1mWorking on: $d\e[m\"" >> Makefile
  echo -e "\t@make --no-print-directory -C $d clean" >> Makefile
 done
 

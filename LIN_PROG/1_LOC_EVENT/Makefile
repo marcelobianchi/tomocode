@@ -15,7 +15,7 @@ clean:
 	@rm -f *.o $(BIN)
 
 fullclean: clean
-	@rm $(BIN)
+	@rm -f $(BIN)
 
 install:
 	@cp $(BIN) $(DESTDIR)

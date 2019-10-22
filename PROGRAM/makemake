@@ -9,6 +9,8 @@ do
    source ./CONFIG/"$d"
  else 
    echo " W:> No config file $d"
+   EXTRAOBJ=""
+   LIB=""
  fi
   
  cd "$d"
@@ -46,7 +48,7 @@ done
 echo "all:" > Makefile
 for d in $comp
 do
- echo -e "\t@echo -e \"\e[31;1mWorking on: $d\e[m\"" >> Makefile
+ echo -e "\t@echo \"\e[31;1mWorking on: $d\e[m\"" >> Makefile
  echo -e "\t@make --no-print-directory -C $d" >> Makefile
  echo -e "\t@echo \"\"" >> Makefile
 done
@@ -55,7 +57,7 @@ echo "" >> Makefile
 echo "clean:" >> Makefile
 for d in $comp
 do
- echo -e "\t@echo -e \"\e[31;1mWorking on: $d\e[m\"" >> Makefile
+ echo -e "\t@echo \"\e[31;1mWorking on: $d\e[m\"" >> Makefile
  echo -e "\t@make --no-print-directory -C $d clean" >> Makefile
 done
 

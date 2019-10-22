@@ -1,6 +1,6 @@
 include ../../Makerules
 OBJ=add_matr.o 
-OBJ+=../../SUBR/RAZNOE/alin.o ../../SUBR/RAZNOE/int_best.o
+OBJ+=
 BIN=add_matr.exe
 
 %.o:%.f90
