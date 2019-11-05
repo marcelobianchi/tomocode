@@ -1,5 +1,5 @@
 FC=gfortran
 CC=gcc
 
-FFLAGS=-I./ -DLINUX
-CFLAGS=-I./ -O2 -DLINUX
+FFLAGS=-I./ -DLINUX=1
+CFLAGS=-I./ -O2 -DLINUX=1
