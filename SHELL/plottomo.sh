@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash
 
 ## BSHM CHECK
 [ -z "$tomobase" ] && echo "tomobase VAR NOT DEFINED." && exit
@@ -46,10 +46,14 @@ echo "Ver $vfirst $vlast"
 echo "Max: $max"
 echo ""
 
-label="1a15WESN"
-labelb="1a15WEsN"
-label2="50a500/50a150WSe"
-label2b="50a500/50a150WSe"
+X_mark_space=$(gethorcoords $clon $clat | awk '{printf "%d",(($2-$1)/3)}')
+label="1a${X_mark_space}WESN"
+labelb="1a${X_mark_space}WEsN"
+
+label2="50a250/50a150WSe"
+label2b="50a250/50a150WSe"
+
+maxdepth=450
 
 for toplot in `seq 1 $max`
 do
@@ -64,18 +68,18 @@ do
 			[ $toplot -eq 1 ] && getareacenter | psxy -R -J -O -K -Sc0.2 -Gblack >> $ps
 			g_shift -Y-8.3 >> $ps
 		fi
-		label="1a15wESN"
-		labelb="1a15wEsN"
+		label="1a${X_mark_space}wESN"
+		labelb="1a${X_mark_space}wEsN"
 	fi
 
 	if [ $toplot -le $vlast ]
 	then
 		ashift=5.0
-		plotprofile $toplot "$label2" "-Y-$ashift" 900 tomo topo  moho tomoeve sta >> $ps
-		label2="50a500/50a150:"EMPTY":WSe"
+		plotprofile $toplot "$label2" "-Y-$ashift" $maxdepth tomo topo  moho tomoeve sta >> $ps
+		label2="50a250/50a150:"EMPTY":WSe"
 		if [ $synt -ge 1 ]; then
-			plotprofile $toplot "$label2b" "-Y-5.5" 900 stomo topo moho tomoeve >> $ps
-			label2b="50a500/50a150:"EMPTY":WSe"
+			plotprofile $toplot "$label2b" "-Y-5.5" $maxdepth stomo topo moho tomoeve >> $ps
+			label2b="50a250/50a150:"EMPTY":WSe"
 			ashift=10.5
 		fi
 		g_shift -Y$ashift >> $ps

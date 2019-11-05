@@ -9,7 +9,7 @@ function streambln() {
 }
 
 source $tomobase/SHELL/tomo.bshm
-[ `pwd` != "$tomobase/FIG_FILES" ] && echo "I should be in the fig-files dir !" && exit
+[ `pwd` != $(cd "$tomobase/FIG_FILES" && pwd) ] && echo "I should be in the fig-files dir !" && exit
 
 area=$(getfigarea)
 model=$(getfigmodel)

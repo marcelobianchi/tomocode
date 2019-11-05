@@ -1,6 +1,6 @@
 # Defaults
 
-[ -z "$GMTDATA" ] && echo "helpme2.sh: Cannot find GMTDATA folder" && return 1
+# [ -z "$GMTDATA" ] && echo "helpme.sh: Cannot find GMTDATA folder" && return 1
 
 export topoGrid="$GMTDATA/etopo2.grd"
 export folder=""
@@ -647,7 +647,7 @@ EOF
 function preparetomoilu() {
  gridfile="$1"
  g1="$2"
-
+ [ ! -f "$gridfile" ] && return
  R=`grdinfo -C "$gridfile" | awk '{print "-R"$2"/"$3"/"$4"/"$5}'`
 
  grdcut $R $topoGrid -Gla.grd
@@ -888,6 +888,8 @@ function prepareTopo(){
  rm -f topo.grd
  rm -f ilutopo.grd
 
+ [ ! -f "$topoGrid" ] && return 
+ 
  grdcut $MAPR $topoGrid -Gtopo.grd
  [ $? -ne 0 ] && return
  makeilugrid topo.grd ilutopo.grd 0.2
