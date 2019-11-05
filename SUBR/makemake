@@ -11,6 +11,13 @@ do
  cat << EOF > Makefile
 include ../../Makerules
 OBJ=$OBJ
+EOF
+
+if [ "$d" == "OTHERS" ] ; then
+	echo "FFLAGS+=-cpp" >> Makefile
+fi
+
+cat << EOF >> Makefile
 
 %.o:%.f90
 	\$(FC) -c \$(FFLAGS) \$<
