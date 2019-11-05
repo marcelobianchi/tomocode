@@ -2,7 +2,6 @@
 
 [ -z "$GMTDATA" ] && echo "helpme2.sh: Cannot find GMTDATA folder" && return 1
 
-#export topoGrid="$GMTDATA/SA.srtm"
 export topoGrid="$GMTDATA/etopo2.grd"
 export folder=""
 
@@ -664,6 +663,7 @@ function preparetomoilu() {
 ### Earthquakes   ################################################################################################
 ##################################################################################################################
 function earthquakes() {
+  [ ! -d "$GMTDATA" ] && echo "No eq-file found ... doing nothing" 1>&2 && return
   awk '{print $2,$1,$3}' $GMTDATA/catalog/engdahl-all.dat
 }
 
@@ -671,11 +671,12 @@ function earthquakes() {
 ### Slabs         ################################################################################################
 ##################################################################################################################
 function slabs() {
-for i in `find $GMTDATA/catalog/slab/ -type f -print`
-do
-  echo ">"
-  awk '{if ($1 != ">" ) {print $2,$1} else {print $0}}' $i
-done
+  [ ! -d "$GMTDATA" ] && echo "No slab data found ... doing nothing" 1>&2 && return
+  for i in `find $GMTDATA/catalog/slab/ -type f -print`
+  do
+    echo ">"
+    awk '{if ($1 != ">" ) {print $2,$1} else {print $0}}' $i
+  done
 }
 
 ##################################################################################################################
@@ -928,7 +929,7 @@ function error() {
 ### Volcanos      ################################################################################################
 ##################################################################################################################
 function volcanos() {
-cat <<EOF | awk '{print $2,$1}'
+ cat <<EOF | awk '{print $2,$1}'
 -25.98	-66.93  - - GALAN
 -27.12	-68.55	6887	1900	Ojos de Salado
 -26.62	-68.15	5740	Peinado
@@ -937,7 +938,7 @@ cat <<EOF | awk '{print $2,$1}'
 -26.76	-67.74	Cerro Blanco
 -27.20	-66.30	Farallon Negro
 EOF
+ [ ! -d "$GMTDATA" ] && echo "No Volcano List ... doing nothing ... more " 1>&2 && return
  awk '{print $2,$1}' $GMTDATA/catalog/important.dat
  awk '{print $2,$1}' $GMTDATA/catalog/global-volcano-list.txt
 }
-
