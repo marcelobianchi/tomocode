@@ -1,42 +1,25 @@
 #!/bin/bash
 
-# Auto installation part if $1 == install
-if [ $# -ge 1 ]; then
-	if [ "$1" == "install" ]; then
-		folder=""
-		[ -z "$BSHM" ] && echo "Warning: BSHM variable not defined."
-		[ ! -z "$2" ] && folder="$2" || folder="$BSHM"
-		[ -z "$folder" ] && echo "No INSTALL FOLDER found or given" && exit
-		[ ! -d "$folder" ] && echo "INSTALL FOLDER ($folder) is not a folder" && exit
-		[ -f "$folder/tomo.bshm" ] && echo "tomo.bshm already exists in $folder" && exit
-
-		cd `dirname $0`
-		here=`pwd`
-		(cd "$folder" && ln -s "$here/tomo.bshm") || exit
-		echo "File installed @ $folder/tomo.bshm"
-		exit
-	fi
-
-	echo "Invalid option: $*"
-	echo "Valid options are: install [folder]"
-	echo ""
-	exit
-fi
-
 #
 ## Setup
 #
 
 # Set the path to the GMT data stuff
-export GMTDATA="/home/mbianchi/bin/gmt.mapa"
+export GMTDATA=""
 
 # Set the path to the tomobase folder
-export tomobase="/home/mbianchi/Work/tomocode"
+export tomobase=""
 
 ## end setup
 
-[ ! -d "${tomobase}" ] && echo "tomo.bshm: Invalid folder '${tomobase}', please edit tomo.bshm and set the tomoroot folder." && return 1
+if [ ! -d "${tomobase}" ]; then
+ echo ""
+ echo "tomo.bshm: Invalid folder '${tomobase}', please edit tomo.bshm and set the tomobase folder."
+ echo ""
+else
+
 export PATH=${tomobase}/SHELL:$PATH
+
 #
 
 # Setup bash completion
@@ -750,3 +733,5 @@ function getnumberfromsynth() {
     }
     END { if (found) print ct; }' $tomobase/kod_syn_all.dat
 }
+
+fi
